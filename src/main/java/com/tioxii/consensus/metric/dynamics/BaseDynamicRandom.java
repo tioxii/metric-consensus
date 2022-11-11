@@ -13,7 +13,6 @@ public class BaseDynamicRandom implements IDynamic {
     public INode applyDynamicOn(int index, INode[] nodes) {
         Random r = new Random();
 
-        
         if(r.nextBoolean()) {
             return new OneMajorityDynamic().applyDynamicOn(index, nodes);
         } else {

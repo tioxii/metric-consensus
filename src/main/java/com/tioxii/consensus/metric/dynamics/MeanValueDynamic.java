@@ -1,18 +1,23 @@
 package com.tioxii.consensus.metric.dynamics;
 
+import org.apache.commons.math3.util.Precision;
+
 import com.tioxii.consensus.metric.nodes.INode;
 import com.tioxii.consensus.metric.util.DynamicUtil;
 
 public class MeanValueDynamic implements IDynamic {
 
     int h = 1;
+    int roundToDigits = 18;
 
     /**
      * Calculates the mean of h other plus itself nodes and jumps to it;
      * @param h how many other nodes are asked
+     * @param roundToDigits the precision
      */
-    public MeanValueDynamic(int h) {
+    public MeanValueDynamic(int h, int roundToDigits) {
         this.h = h;
+        this.roundToDigits = roundToDigits;
     }
     
     
@@ -23,12 +28,10 @@ public class MeanValueDynamic implements IDynamic {
 
         for(int i = 0; i < opinions.length; i++) {
             for (int j = 0; j < opinions[i].length; j++) {
-                mean[j] += (opinions[i][j]/opinions.length);
+                mean[j] += Precision.round((opinions[i][j]/opinions.length), roundToDigits);
             }
         }
         
-
-
         return DynamicUtil.createNewNode(nodes[index], mean);
     }
     

@@ -36,6 +36,7 @@ public class SimApp {
         Configuration config = context.getConfiguration();
         LoggerConfig rootConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
         rootConfig.setLevel(LEVEL);
+        
         context.updateLoggers();
     }
 
