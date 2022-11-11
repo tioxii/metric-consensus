@@ -7,9 +7,11 @@ import java.util.concurrent.Semaphore;
 
 import com.tioxii.consensus.metric.dynamics.BaseDynamic;
 import com.tioxii.consensus.metric.dynamics.IDynamic;
+import com.tioxii.consensus.metric.dynamics.MeanValueDynamic;
 import com.tioxii.consensus.metric.nodes.BaseNode;
 import com.tioxii.consensus.metric.nodes.INode;
 import com.tioxii.consensus.metric.util.NodeUtil;
+import com.tioxii.consensus.metric.util.Preset;
 import com.tioxii.consensus.metric.util.SampleCollection;
 
 public class Simulation {
@@ -19,11 +21,12 @@ public class Simulation {
     public static int[] PARTICIPATING_NODES = {1000};
     public static boolean GENERATE_RANDOM = true;
     public static float FRACTION_DISHONEST = 0.0f;
-    public static Semaphore MUTEX = new Semaphore(6);
-    public static IDynamic DYNAMIC = new BaseDynamic();
+    public static int MAX_THREAD_COUNT = 6;
+    public static Semaphore MUTEX = new Semaphore(MAX_THREAD_COUNT); //maximum threads simulating
+    public static IDynamic DYNAMIC = new MeanValueDynamic(1, 3);
     public static Class<? extends INode> NODETYPE = BaseNode.class;
     public static boolean SYNCHRONOUS = true;
-    public static String PRESET = "opposing_clusters";
+    public static Preset PRESET = Preset.OPPOSING_CLUSTERS;
     public static double[][] POSITIONS = null;
     public static String DIR = "results/results.csv";
 
@@ -48,7 +51,14 @@ public class Simulation {
         }
     }
 
-    public static void simulate() {
+    public static void startSimulate() {
+        for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
+            simulate(i);
+        }
+
+    }
+
+    public static void simulate(int iteration) {
         NetworkQ nets = new NetworkQ();
 
         System.out.println("-------Starting Simulation-------");
@@ -59,7 +69,7 @@ public class Simulation {
         evaluation.start();
 
         for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(DYNAMIC, NodeUtil.generateNodes(PRESET, NODETYPE, PARTICIPATING_NODES[0], DIMENSIONS, POSITIONS), SYNCHRONOUS);
+            Network net = new Network(DYNAMIC, NodeUtil.generateNodes(PRESET, NODETYPE, PARTICIPATING_NODES[iteration], DIMENSIONS, POSITIONS), SYNCHRONOUS);
             
             try {
                 Network.mutex.acquire();
@@ -77,13 +87,6 @@ public class Simulation {
         try {
             evaluation.join();
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            SampleCollection collection = new SampleCollection(DIR);
-            collection.writeRoundsToCSV(PARTICIPATING_NODES[0], rounds);
-        } catch (IOException e) {
             e.printStackTrace();
         }
 

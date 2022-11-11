@@ -25,7 +25,7 @@ public class SimApp {
     public static void main(String[] args) {
         setUpLoggers();
         LOGGER.info("Hello World");
-        Simulation.simulate();
+        Simulation.startSimulate();
     }
 
     /**

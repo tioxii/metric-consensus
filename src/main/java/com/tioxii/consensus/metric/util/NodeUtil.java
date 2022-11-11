@@ -19,11 +19,11 @@ public class NodeUtil {
      * @param positions
      * @return
      */
-    public static INode[] generateNodes(String preset, Class<? extends INode> clazz, int participants, int dimensions, double[][] positions) {
+    public static INode[] generateNodes(Preset _preset, Class<? extends INode> clazz, int participants, int dimensions, double[][] positions) {
         //TODO enum
-        switch(preset) {
-            case "preset": return generatePreset(clazz, positions);
-            case "opposing_clusters":
+        switch(_preset) {
+            case PRESET: return generatePreset(clazz, positions);
+            case OPPOSING_CLUSTERS:
                 if(participants % 2 == 1) {
                     //TODO throw exception
                     System.out.println("Hello");
@@ -31,7 +31,7 @@ public class NodeUtil {
                 }
                 participants /= 2;
                 return generateClusters(OPPOSING, clazz, participants);
-            case "random": return generateRandom(participants, clazz, dimensions);
+            case RANDOM: return generateRandom(participants, clazz, dimensions);
             default: return generateRandom(participants, clazz, dimensions);
         }
     }
