@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class BaseNode implements INode {
-    double[] opinion = null;
+    private double[] opinion = null;
+    public INode[] neighbors = null;
 
     public BaseNode(double[] newOpinion) {
         this.opinion = newOpinion;

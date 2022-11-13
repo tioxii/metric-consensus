@@ -59,7 +59,7 @@ public class NodeUtil {
 
         Collections.shuffle(nodes);
 
-        INode[] array = new INode[1000];
+        INode[] array = new INode[nodes.size()];
 
         return nodes.toArray(array);
     }

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.tioxii.consensus.metric.dynamics.BaseDynamic;
 import com.tioxii.consensus.metric.dynamics.IDynamic;
 import com.tioxii.consensus.metric.dynamics.MeanValueDynamic;
@@ -16,19 +19,22 @@ import com.tioxii.consensus.metric.util.SampleCollection;
 
 public class Simulation {
     
-    public static int DIMENSIONS = 2;
-    public static int SIM_ROUNDS = 1000;
-    public static int[] PARTICIPATING_NODES = {1000};
-    public static boolean GENERATE_RANDOM = true;
-    public static float FRACTION_DISHONEST = 0.0f;
-    public static int MAX_THREAD_COUNT = 6;
+    public int DIMENSIONS = 2;
+    public int SIM_ROUNDS = 1000;
+    public int[] PARTICIPATING_NODES = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    public boolean GENERATE_RANDOM = true;
+    public float FRACTION_DISHONEST = 0.0f;
+    public static int MAX_THREAD_COUNT = 1;
     public static Semaphore MUTEX = new Semaphore(MAX_THREAD_COUNT); //maximum threads simulating
-    public static IDynamic DYNAMIC = new MeanValueDynamic(1, 3);
-    public static Class<? extends INode> NODETYPE = BaseNode.class;
-    public static boolean SYNCHRONOUS = true;
-    public static Preset PRESET = Preset.OPPOSING_CLUSTERS;
-    public static double[][] POSITIONS = null;
-    public static String DIR = "results/results.csv";
+    public IDynamic DYNAMIC = new BaseDynamic();
+    public Class<? extends INode> NODETYPE = BaseNode.class;
+    public boolean SYNCHRONOUS = true;
+    public Preset PRESET = Preset.RANDOM;
+    public double[][] POSITIONS = null;
+    public String DIR = "results/results.csv";
+    public SampleCollection sample;
+    public static Logger LOGGER = LogManager.getLogger("Simulation");
+
 
     public static class NetworkQ {
         ArrayList<Network> nets = new ArrayList<Network>();
@@ -51,14 +57,25 @@ public class Simulation {
         }
     }
 
-    public static void startSimulate() {
+    public void startSimulate() {
+        try {
+            this.sample = new SampleCollection(DIR);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
             simulate(i);
         }
 
+        try {
+            this.sample.close();
+        } catch (IOException e) {   
+            e.printStackTrace();
+        }
     }
 
-    public static void simulate(int iteration) {
+    public void simulate(int iteration) {
         NetworkQ nets = new NetworkQ();
 
         System.out.println("-------Starting Simulation-------");
@@ -90,6 +107,12 @@ public class Simulation {
             e.printStackTrace();
         }
 
+        try {
+            sample.writeRoundsToCSV(PARTICIPATING_NODES[iteration], rounds);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
         double sum = Arrays.stream(rounds).sum();
 
         double average = Arrays.stream(rounds).average().getAsDouble(); 
@@ -100,7 +123,7 @@ public class Simulation {
         
     }
 
-    public static void evaluate(NetworkQ nets, int[] rounds) {
+    public void evaluate(NetworkQ nets, int[] rounds) {
         Network net = null;
 
         for (int i = 0; i < SIM_ROUNDS; i++) {

@@ -17,6 +17,7 @@ public class SampleCollectionTest {
             SampleCollection collection = new SampleCollection(PATH);
             collection.writeRoundsToCSV(PARTICIPANTS, rounds);
             collection.writeRoundsToCSV(PARTICIPANTS, rounds);
+            collection.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

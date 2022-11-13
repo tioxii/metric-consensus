@@ -10,17 +10,28 @@ import org.apache.commons.csv.CSVPrinter;
 public class SampleCollection {
     
     FileWriter out;
+    CSVPrinter printer;
 
     public SampleCollection(String path) throws IOException {
         this.out = new FileWriter(path);
+        printer = new CSVPrinter(out, CSVFormat.DEFAULT);
     }
 
     public void writeRoundsToCSV(int participants, int[] rounds) throws IOException {
-        
-        String[] strArray = Arrays.stream(rounds).mapToObj(String::valueOf).toArray(String[]::new);
+        printer.print(participants);
 
-        try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT)) {
-            printer.printRecord(participants, String.join(",",strArray));
-        }
+        Arrays.stream(rounds).forEach(i -> {
+            try {
+                printer.print(i);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        printer.println();
+    }
+
+    public void close() throws IOException {
+        printer.close();
     }
 }
