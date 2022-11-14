@@ -24,8 +24,8 @@ public class DynamicUtil {
         return ret;
     }
 
-    //TODO change so it doesnt depend on the number of nodes
-    public static double[][] selectRandomOpinion(int index, int h, INode[] nodes) {
+    @Deprecated
+    public static double[][] selectRandomOpinion1(int index, int h, INode[] nodes) {
         ArrayList<Integer> list = new ArrayList<Integer>();
         IntStream.range(0, nodes.length).forEach(val -> list.add(val)); 
         
@@ -37,6 +37,25 @@ public class DynamicUtil {
         for(int i = 0; i < h; i++) {
             opinions[i] = nodes[list.remove(r.nextInt(list.size()))].getOpinion();
         }
+        return opinions;
+    }
+
+    public static double[][] selectRandomOpinion(int index, int h, INode[] nodes) {
+        double[][] opinions = new double[h+1][];
+        ArrayList<Integer> indecies = new ArrayList<Integer>();
+        Random r = new Random();
+
+        opinions[h] = nodes[index].getOpinion();
+
+        for (int i = 0; i < h; i++) {
+            int r1 = r.nextInt(nodes.length);
+            while(indecies.contains(r1)) {
+                r1 = r.nextInt(nodes.length);
+            }
+            indecies.add(r1);
+            opinions[i] = nodes[r1].getOpinion();
+        }
+
         return opinions;
     }
 }
