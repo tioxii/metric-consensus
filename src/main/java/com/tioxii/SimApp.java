@@ -20,7 +20,7 @@ public class SimApp {
     
     public static final Level LEVEL = Level.INFO;
 
-    public static final Logger LOGGER = LogManager.getLogger("[Simulation]");
+    public static final Logger LOGGER = LogManager.getLogger("Simulation");
 
     public static void main(String[] args) {
         setUpLoggers();
@@ -39,11 +39,5 @@ public class SimApp {
         rootConfig.setLevel(LEVEL);
         
         context.updateLoggers();
-    }
-
-    public static void createSimulation(int dimensions, String metrics,
-                                        String nodeType, String dynamic,
-                                        int threadCount, int iterations,
-                                        boolean synchronous, boolean randomGeneratedNodes) {
     }
 }

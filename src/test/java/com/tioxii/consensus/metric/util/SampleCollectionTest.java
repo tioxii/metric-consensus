@@ -1,5 +1,6 @@
 package com.tioxii.consensus.metric.util;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
@@ -14,7 +15,8 @@ public class SampleCollectionTest {
         
 
         try {
-            SampleCollection collection = new SampleCollection(PATH);
+            File f = new File(PATH);
+            SampleCollection collection = new SampleCollection(f);
             collection.writeRoundsToCSV(PARTICIPANTS, rounds);
             collection.writeRoundsToCSV(PARTICIPANTS, rounds);
             collection.close();

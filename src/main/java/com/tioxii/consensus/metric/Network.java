@@ -1,7 +1,6 @@
 package com.tioxii.consensus.metric;
 
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,21 +9,20 @@ import com.tioxii.consensus.metric.dynamics.IDynamic;
 import com.tioxii.consensus.metric.nodes.INode;
 
 public class Network implements Runnable {
+    //Environment constraints
     private IDynamic dynamic;
-
     private INode[] nodes = null;
-
     private boolean isSynchronous = true;
-
-    private ArrayList<double[]> nodesHistroy = new ArrayList<double[]>();
-
-    private int rounds = 0;
-
     public Thread t = null;
 
-    public static Semaphore mutex = Simulation.MUTEX;
-
+    //Logging
     public static Logger LOGGER = LogManager.getLogger(Network.class.getName());
+
+    //Measurements
+    private int rounds = 0;
+    public double[] startMean = null;
+    public double[] endMean = null;
+    private ArrayList<double[]> nodesHistroy = new ArrayList<double[]>();
 
     /**
      * Constructor
@@ -43,14 +41,20 @@ public class Network implements Runnable {
      * @return State of consensus
      */
     public void run() {
+        
+        startMean = calculateMean();
+        
         //when synchronous, all nodes are updated at the same time
         //when asynchronous, nodes are updated one at a time
-        if (isSynchronous)
+        if (isSynchronous) {
             synchronous(); 
-
-        asynchronous();
+        } else {
+            asynchronous();
+        }
         
-        mutex.release();
+        endMean = calculateMean();
+
+        
     }
 
     /**
@@ -123,7 +127,6 @@ public class Network implements Runnable {
     /**
      * Write nodes to CSV file
      */
-
     public void writeNodesToCSV() {
         //TODO write to CSV file
     }
@@ -131,7 +134,6 @@ public class Network implements Runnable {
     /**
      * Return the Number of Rounds
      */
-
     public int getRounds() {
         return this.rounds;
     }
@@ -148,13 +150,12 @@ public class Network implements Runnable {
      * @return
      */
     public double[] calculateMean() {
-        double[] mean = new double[nodes.length];
+        double[] mean = new double[nodes[0].getOpinion().length];
 
         for(int i = 0; i < nodes.length; i++) {
             for (int j = 0; j < nodes[i].getOpinion().length; j++) {
-                mean[i] += nodes[i].getOpinion()[j];
+                mean[j] += (nodes[i].getOpinion()[j] / nodes.length);
             }
-            mean[i] /= nodes[i].getOpinion().length;
         }
 
         return mean;

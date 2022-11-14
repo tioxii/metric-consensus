@@ -1,5 +1,6 @@
 package com.tioxii.consensus.metric.util;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -9,11 +10,10 @@ import org.apache.commons.csv.CSVPrinter;
 
 public class SampleCollection {
     
-    FileWriter out;
     CSVPrinter printer;
 
-    public SampleCollection(String path) throws IOException {
-        this.out = new FileWriter(path);
+    public SampleCollection(File f) throws IOException {
+        FileWriter out = new FileWriter(f);
         printer = new CSVPrinter(out, CSVFormat.DEFAULT);
     }
 
