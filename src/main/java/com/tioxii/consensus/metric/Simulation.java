@@ -2,6 +2,8 @@ package com.tioxii.consensus.metric;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
@@ -22,7 +24,7 @@ public class Simulation {
     //Environment-Settings
     public int DIMENSIONS = 2;
     public int SIM_ROUNDS = 1000;
-    public int[] PARTICIPATING_NODES = {100, 1000, 10000};
+    public int[] PARTICIPATING_NODES = {100, 1000};
     public boolean GENERATE_RANDOM = true;
     public float FRACTION_DISHONEST = 0.0f;
     public IDynamic DYNAMIC = new BaseDynamic();
@@ -32,7 +34,7 @@ public class Simulation {
     public double[][] POSITIONS = null;
     
     //Evaluation-Settings
-    public String FILE_NAME = "results.csv";
+    public String FILE_NAME = null;
     public String DIR = "results/";
     
     //Utility
@@ -68,7 +70,15 @@ public class Simulation {
 
     public void startSimulate() {
         MUTEX = new Semaphore(MAX_THREAD_COUNT);
-
+        
+        //Generate unique filenames
+        if(FILE_NAME == null) {
+            DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy__HH-mm-ss");
+            LocalDateTime dateTime = LocalDateTime.now();
+            String formattedDate = dateTime.format(timeFormat);
+            FILE_NAME = formattedDate + "__DIM-" + DIMENSIONS + "__R-" + SIM_ROUNDS + "__SYNC-" + SYNCHRONOUS + ".csv";
+        }
+        
         try {
             File dir = new File(DIR);
             if(!dir.exists()) {
