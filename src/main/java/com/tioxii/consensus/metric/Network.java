@@ -1,6 +1,7 @@
 package com.tioxii.consensus.metric;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,7 @@ public class Network implements Runnable {
 
     //Logging
     public static Logger LOGGER = LogManager.getLogger(Network.class.getName());
+    public static Semaphore MUTEX = Simulation.MUTEX;
 
     //Measurements
     private int rounds = 0;
@@ -54,7 +56,7 @@ public class Network implements Runnable {
         
         endMean = calculateMean();
 
-        
+        MUTEX.release();
     }
 
     /**

@@ -22,7 +22,7 @@ public class Simulation {
     //Environment-Settings
     public int DIMENSIONS = 2;
     public int SIM_ROUNDS = 1000;
-    public int[] PARTICIPATING_NODES = {100};
+    public int[] PARTICIPATING_NODES = {100, 1000, 10000};
     public boolean GENERATE_RANDOM = true;
     public float FRACTION_DISHONEST = 0.0f;
     public IDynamic DYNAMIC = new BaseDynamic();
@@ -97,6 +97,7 @@ public class Simulation {
         int[] rounds = new int[SIM_ROUNDS];
 
         Thread evaluation = new Thread(() -> evaluate(nets, rounds));
+        evaluation.setName("Evaluation");
         evaluation.start();
 
         for(int i = 0; i < SIM_ROUNDS; i++) {
@@ -106,6 +107,7 @@ public class Simulation {
                 MUTEX.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                LOGGER.error(e.getMessage());
             }
 
             net.t = new Thread(net);
@@ -121,6 +123,7 @@ public class Simulation {
             evaluation.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         //Printing Results to CSV file
@@ -158,10 +161,9 @@ public class Simulation {
             }
 
             //So other Threads can start.
-            MUTEX.release();
 
             rounds[i] += net.getRounds();
-            LOGGER.info("Simulation-Round " + net.t.getName() + " complete with " + net.getRounds() + "rounds! Start-Mean: " + Arrays.toString(net.startMean) + " End-Mean: " + Arrays.toString(net.endMean));
+            LOGGER.info("Simulation-Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds! Start-Mean: " + Arrays.toString(net.startMean) + " End-Mean: " + Arrays.toString(net.endMean));
         }
         LOGGER.info("Evaluation done!");
     }

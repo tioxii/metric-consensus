@@ -15,20 +15,18 @@ public class SampleCollection {
     public SampleCollection(File f) throws IOException {
         FileWriter out = new FileWriter(f);
         printer = new CSVPrinter(out, CSVFormat.DEFAULT);
+        printer.printRecord("Participants", "Rounds");
     }
 
     public void writeRoundsToCSV(int participants, int[] rounds) throws IOException {
-        printer.print(participants);
 
         Arrays.stream(rounds).forEach(i -> {
             try {
-                printer.print(i);
+                printer.printRecord(participants, i);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-
-        printer.println();
     }
 
     public void close() throws IOException {
