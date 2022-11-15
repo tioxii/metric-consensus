@@ -1,4 +1,4 @@
-package com.tioxii.consensus.metric.nodes;
+package com.tioxii.consensus.metric.api;
 
 public interface INode {
     double[] getOpinion();

@@ -7,8 +7,8 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.nodes.BaseNode;
-import com.tioxii.consensus.metric.nodes.INode;
 
 public class NodeUtilTest {
     

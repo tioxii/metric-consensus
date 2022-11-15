@@ -2,7 +2,8 @@ package com.tioxii.consensus.metric.dynamics;
 
 import org.apache.commons.math3.util.Precision;
 
-import com.tioxii.consensus.metric.nodes.INode;
+import com.tioxii.consensus.metric.api.IDynamic;
+import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.util.DynamicUtil;
 
 public class MeanValueDynamic implements IDynamic {

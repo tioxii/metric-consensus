@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import com.tioxii.consensus.metric.nodes.INode;
+import com.tioxii.consensus.metric.api.INode;
 
 public class DynamicUtil {
     

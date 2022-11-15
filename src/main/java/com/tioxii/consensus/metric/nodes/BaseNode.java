@@ -3,6 +3,8 @@ package com.tioxii.consensus.metric.nodes;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.tioxii.consensus.metric.api.INode;
+
 public class BaseNode implements INode {
     private double[] opinion = null;
     public INode[] neighbors = null;

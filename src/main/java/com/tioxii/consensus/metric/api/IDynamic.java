@@ -1,6 +1,4 @@
-package com.tioxii.consensus.metric.dynamics;
-
-import com.tioxii.consensus.metric.nodes.INode;
+package com.tioxii.consensus.metric.api;
 
 public interface IDynamic {
     

@@ -6,8 +6,8 @@ import java.util.concurrent.Semaphore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tioxii.consensus.metric.dynamics.IDynamic;
-import com.tioxii.consensus.metric.nodes.INode;
+import com.tioxii.consensus.metric.api.IDynamic;
+import com.tioxii.consensus.metric.api.INode;
 
 public class Network implements Runnable {
     //Environment constraints
@@ -56,7 +56,7 @@ public class Network implements Runnable {
         
         endMean = calculateMean();
 
-        MUTEX.release();
+        //MUTEX.release();
     }
 
     /**

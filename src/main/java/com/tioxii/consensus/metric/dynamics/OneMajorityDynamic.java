@@ -1,6 +1,7 @@
 package com.tioxii.consensus.metric.dynamics;
 
-import com.tioxii.consensus.metric.nodes.INode;
+import com.tioxii.consensus.metric.api.IDynamic;
+import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.util.DynamicUtil;
 
 public class OneMajorityDynamic implements IDynamic {

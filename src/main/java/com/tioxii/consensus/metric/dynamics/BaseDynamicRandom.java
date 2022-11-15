@@ -2,7 +2,8 @@ package com.tioxii.consensus.metric.dynamics;
 
 import java.util.Random;
 
-import com.tioxii.consensus.metric.nodes.INode;
+import com.tioxii.consensus.metric.api.IDynamic;
+import com.tioxii.consensus.metric.api.INode;
 
 public class BaseDynamicRandom implements IDynamic {
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.tioxii.consensus.metric.nodes.INode;
+import com.tioxii.consensus.metric.api.INode;
 
 public class NodeUtil {
     public static double[][] OPPOSING = {{0.25, 0.5},{0.75, 0.5}};
