@@ -3,10 +3,12 @@ package com.tioxii.consensus.metric.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+
+import com.tioxii.consensus.metric.Simulation.Data;
 
 public class SampleCollection {
     
@@ -18,11 +20,11 @@ public class SampleCollection {
         printer.printRecord("Participants", "Rounds");
     }
 
-    public void writeRoundsToCSV(int participants, int[] rounds) throws IOException {
+    public void writeRoundsToCSV(int participants, ArrayList<Data> data) throws IOException {
 
-        Arrays.stream(rounds).forEach(i -> {
+        data.stream().forEach(i -> {
             try {
-                printer.printRecord(participants, i);
+                printer.printRecord(participants, i.consensusTime);
             } catch (IOException e) {
                 e.printStackTrace();
             }

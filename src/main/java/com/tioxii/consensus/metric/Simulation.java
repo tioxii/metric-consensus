@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
@@ -48,10 +47,10 @@ public class Simulation {
     public int MAX_THREAD_COUNT = 6;
     public static Semaphore MUTEX; //maximum threads simulating
 
-    private class Data {
-        ArrayList<Integer> consensusTime = new ArrayList<>();
-        ArrayList<Double[]> startMean = new ArrayList<>();
-        ArrayList<Double[]> endMean = new ArrayList<>();
+    public class Data {
+        public int consensusTime;
+        public double[] startMean;
+        public double[] endMean;
     }
 
     private class NetworkQ {
@@ -140,10 +139,9 @@ public class Simulation {
 
     public void simulate(int iteration) throws NetworkGenerationException, NodeGenerationException {
         NetworkQ nets = new NetworkQ();
+        ArrayList<Data> data = new ArrayList<>();
 
         LOGGER.info("-------Starting Simulation-------");
-
-        Data data = new Data();
 
         Thread evaluation = new Thread(() -> evaluate(nets, data));
         evaluation.setName("Evaluation");
@@ -175,20 +173,19 @@ public class Simulation {
 
         //Printing Results to CSV file
         try {
-            sample.writeRoundsToCSV(PARTICIPATING_NODES[iteration], rounds);
+            sample.writeRoundsToCSV(PARTICIPATING_NODES[iteration], data);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
 
-        double sum = Arrays.stream(data.consensusTime).sum();
-        double average = data.consensusTime.stream().average
+        int[] rounds = data.stream().map(elem -> elem.consensusTime).mapToInt(Integer::intValue).toArray();
+        double average = Arrays.stream(rounds).average().getAsDouble();
 
         LOGGER.info("-------------RESULTS-------------");
         LOGGER.info("Average number of rounds: " + average);
-        LOGGER.info("Sum of all Rounds: " + sum);
     }
 
-    public void evaluate(NetworkQ nets, Data data) {
+    public void evaluate(NetworkQ nets, ArrayList<Data> data) {
         Network net = null;
 
         for (int i = 0; i < SIM_ROUNDS; i++) {
@@ -203,17 +200,11 @@ public class Simulation {
             }
 
             //Collecting data
-            if(net.startMean.length == net.endMean.length) {
-                Double[] startMean = new Double[net.startMean.length];
-                Double[] endMean = new Double[net.endMean.length];
-                for (int j = 0; j < net.startMean.length; j++) {
-                    startMean[j] = (Double) net.startMean[j];
-                    endMean[j] = (Double) net.endMean[j];
-                }
-                data.startMean.add(startMean);
-                data.endMean.add(endMean);
-            }
-            data.consensusTime.add(net.getRounds());
+            Data d = new Data();
+            d.consensusTime = net.getRounds();
+            d.startMean = net.startMean;
+            d.endMean = net.endMean;
+            data.add(d);
 
             LOGGER.info("Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds!");
         }
