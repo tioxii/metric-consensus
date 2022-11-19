@@ -19,7 +19,7 @@ public class SampleCollectionTest {
 
         try {
             File f = new File(PATH);
-            SampleCollection collection = new SampleCollection(f);
+            SampleCollection collection = new SampleCollection(f, false);
             
             collection.close();
         } catch (IOException e) {

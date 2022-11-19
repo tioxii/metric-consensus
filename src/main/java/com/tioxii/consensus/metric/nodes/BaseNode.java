@@ -1,5 +1,6 @@
 package com.tioxii.consensus.metric.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -7,7 +8,8 @@ import com.tioxii.consensus.metric.api.INode;
 
 public class BaseNode implements INode {
     private double[] opinion = null;
-    public INode[] neighbors = null;
+    //If null full graph is assumed.
+    public ArrayList<INode> neighbors = null;
 
     public BaseNode(double[] newOpinion) {
         this.opinion = newOpinion;
@@ -34,5 +36,11 @@ public class BaseNode implements INode {
     @Override
     public boolean equals(INode node) {
         return Arrays.equals(opinion, node.getOpinion());
+    }
+
+    public void addNeighbor(INode node) {
+        if(neighbors != null) {
+            neighbors.add(node);
+        }
     }
 }

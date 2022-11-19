@@ -25,8 +25,8 @@ public class SimApp {
     
     //Parameters
     public static int DIMENSIONS = 2;
-    public static int SIM_ROUNDS = 1000;
-    public static int[] PARTICIPATING_NODES = {1000};
+    public static int SIM_ROUNDS = 1;
+    public static int[] PARTICIPATING_NODES = {10};
     public static boolean GENERATE_RANDOM = true;
     public static float FRACTION_DISHONEST = 0.0f;
     public static IDynamic DYNAMIC = new BaseDynamic();
@@ -35,6 +35,10 @@ public class SimApp {
     public static Preset PRESET = Preset.RANDOM;
     public static double[][] POSITIONS = null;
     
+    //Evaluation
+    public static boolean RECORD_RESULTS = false;
+    public static boolean RECORD_POSITIONS = true;
+
     //Utility
     public static int MAX_THREAD_COUNT = 6;
 
@@ -76,6 +80,9 @@ public class SimApp {
         sim.SYNCHRONOUS = SYNCHRONOUS;
         sim.PRESET = PRESET;
         sim.POSITIONS = POSITIONS;
+
+        sim.RECORD_POSITIONS = RECORD_POSITIONS;
+        sim.RECORD_RESULTS = RECORD_RESULTS;
         
         sim.MAX_THREAD_COUNT = MAX_THREAD_COUNT;
     }

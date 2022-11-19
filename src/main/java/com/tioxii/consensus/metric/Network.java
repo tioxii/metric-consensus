@@ -1,7 +1,6 @@
 package com.tioxii.consensus.metric;
 
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,13 +17,13 @@ public class Network implements Runnable {
 
     //Logging
     public static Logger LOGGER = LogManager.getLogger(Network.class.getName());
-    public static Semaphore MUTEX = Simulation.MUTEX;
 
     //Measurements
     private int rounds = 0;
     public double[] startMean = null;
     public double[] endMean = null;
-    private ArrayList<double[]> nodesHistroy = new ArrayList<double[]>();
+    public boolean LOG_NODEHISTROY = true;
+    private ArrayList<double[][]> nodesHistroy = new ArrayList<double[][]>();
 
     /**
      * Constructor
@@ -43,7 +42,6 @@ public class Network implements Runnable {
      * @return State of consensus
      */
     public void run() {
-        
         startMean = calculateMean();
         
         //when synchronous, all nodes are updated at the same time
@@ -55,8 +53,6 @@ public class Network implements Runnable {
         }
         
         endMean = calculateMean();
-
-        //MUTEX.release();
     }
 
     /**
@@ -80,22 +76,27 @@ public class Network implements Runnable {
         boolean converged = false;
 
         do {
-
             INode[] newNodes = new INode[nodes.length];
-
             for(int i = 0; i < nodes.length; i++) {
                 newNodes[i] = dynamic.applyDynamicOn(i, nodes);
+            }
+            
+            if(LOG_NODEHISTROY) {
+                logHistory();
             }
 
             //update nodes
             nodes = newNodes;
-
             rounds++;
             LOGGER.debug("Round: " + rounds);
 
             //check if converged
             converged = isConsensusReached();
         } while (!converged);
+
+        if(LOG_NODEHISTROY) {
+            logHistory();
+        }
 
         return converged;
     }
@@ -110,27 +111,36 @@ public class Network implements Runnable {
         boolean converged = false;
 
         do {
-
             nodes[i] = dynamic.applyDynamicOn(i, nodes);
             i = (i + 1) % nodes.length;
 
+            if(LOG_NODEHISTROY && i == 0) {
+                logHistory();
+            }
+
             rounds++;
-            
-            //System.out.println("Round: " + rounds);
             
             //check if converged
             converged = isConsensusReached();
-
         } while (!converged);
+
+        if(LOG_NODEHISTROY) {
+            logHistory();
+        }
 
         return converged;
     }
 
-    /**
-     * Write nodes to CSV file
-     */
-    public void writeNodesToCSV() {
-        //TODO write to CSV file
+    private void logHistory() {
+        double[][] round = new double[nodes.length][];
+        for (int i = 0; i < nodes.length; i++) {
+            round[i] = new double[nodes[i].getOpinion().length];
+            for (int j = 0; j < round[i].length; j++) {
+                round[i][j] = nodes[i].getOpinion()[j];
+            }
+            
+        }
+        nodesHistroy.add(round);
     }
 
     /**
@@ -143,7 +153,7 @@ public class Network implements Runnable {
     /**
      * Return History
      */
-    public ArrayList<?> getHistory() {
+    public ArrayList<double[][]> getHistory() {
         return this.nodesHistroy;
     }
 
@@ -153,7 +163,7 @@ public class Network implements Runnable {
      */
     public double[] calculateMean() {
         double[] mean = new double[nodes[0].getOpinion().length];
-
+        
         for(int i = 0; i < nodes.length; i++) {
             for (int j = 0; j < nodes[i].getOpinion().length; j++) {
                 mean[j] += (nodes[i].getOpinion()[j] / nodes.length);

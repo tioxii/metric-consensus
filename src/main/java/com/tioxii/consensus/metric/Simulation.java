@@ -36,13 +36,17 @@ public class Simulation {
     public Preset PRESET = Preset.RANDOM;
     public double[][] POSITIONS = null;
     public INodeGenerator GENERATOR = null;
+    public int[][] GRAPH = null;
     
     //Evaluation-Settings
     public String FILE_NAME = null;
+    private String FILE_NAME_POSITIONS = null;
     public String DIR = "results/";
+    public boolean RECORD_RESULTS = true;
+    public boolean RECORD_POSITIONS = false;
     
     //Utility
-    public SampleCollection sample;
+    public ResultWriter writer = null;
     public static Logger LOGGER = LogManager.getLogger("Simulation");
     public int MAX_THREAD_COUNT = 6;
     public static Semaphore MUTEX; //maximum threads simulating
@@ -51,6 +55,42 @@ public class Simulation {
         public int consensusTime;
         public double[] startMean;
         public double[] endMean;
+    }
+
+    private class ResultWriter {
+        private SampleCollection samplePositions = null;
+        private SampleCollection sampleResults = null;
+
+        public ResultWriter(String dir, String fileResults, String filePositions) throws IOException {
+            if(RECORD_POSITIONS) {
+                File f = new File(dir + filePositions);
+                f.createNewFile();
+                this.samplePositions = new SampleCollection(f, false);
+            }
+
+            if(RECORD_RESULTS) {
+                File f = new File(dir + fileResults);
+                f.createNewFile();
+                this.sampleResults = new SampleCollection(f, true);
+            }
+        }
+
+        public void writeResults(int participants,ArrayList<Data> data) throws IOException {
+            if(sampleResults != null)
+                sampleResults.writeRoundsToCSV(participants, data);
+        }
+        public void writePositions(ArrayList<double[][]> positions) throws IOException {
+            if(samplePositions != null)
+                samplePositions.writePositionsToCSV(positions);
+        }
+
+        public void close() throws IOException {
+            if(samplePositions != null)
+                samplePositions.close();
+
+            if(sampleResults != null)
+                sampleResults.close();
+        }
     }
 
     private class NetworkQ {
@@ -109,7 +149,8 @@ public class Simulation {
             LocalDateTime dateTime = LocalDateTime.now();
             String formattedDate = dateTime.format(timeFormat);
             FILE_NAME = formattedDate + "_DIM-" + DIMENSIONS + "_R-" + SIM_ROUNDS + "_SYNC-" + SYNCHRONOUS + ".csv";
-        }
+        } 
+        FILE_NAME_POSITIONS = FILE_NAME + "_POSITIONS" + ".csv";
         
         try {
             //Create directory if it doesn't exist.
@@ -119,9 +160,7 @@ public class Simulation {
             }
 
             //Create file.
-            File f = new File(DIR + FILE_NAME);
-            f.createNewFile();
-            this.sample = new SampleCollection(f);
+            this.writer = new ResultWriter(DIR, FILE_NAME, FILE_NAME_POSITIONS);
 
             for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
                 try {
@@ -131,7 +170,7 @@ public class Simulation {
                 }
             }
             
-            this.sample.close();
+            this.writer.close();
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
@@ -173,7 +212,7 @@ public class Simulation {
 
         //Printing Results to CSV file
         try {
-            sample.writeRoundsToCSV(PARTICIPATING_NODES[iteration], data);
+            writer.writeResults(PARTICIPATING_NODES[iteration], data);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
@@ -205,6 +244,14 @@ public class Simulation {
             d.startMean = net.startMean;
             d.endMean = net.endMean;
             data.add(d);
+
+            //Logging the node history of that round
+            ArrayList<double[][]> hist = net.getHistory();
+            try {
+                writer.writePositions(hist);
+            } catch (IOException e) {
+                LOGGER.error("Failed to log the node position history: " + e.getMessage());
+            }
 
             LOGGER.info("Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds!");
         }

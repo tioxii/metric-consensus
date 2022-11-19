@@ -1,5 +1,7 @@
 package com.tioxii.consensus.metric.util;
 
+import com.tioxii.consensus.metric.exception.NotMatchingDimensionsException;
+
 public class Metrics {
     
     /**
@@ -7,10 +9,10 @@ public class Metrics {
      * @param vectorOne
      * @param vectorTwo
      * @return
+     * @throws NotMatchingDimensionsException
      */
-    public static double getDistanceEuclidean(double[] vectorOne, double[] vectorTwo) { 
-        //TODO throw Exception
-        if(!(vectorOne.length == vectorTwo.length)) { return 0.0; }
+    public static double getDistanceEuclidean(double[] vectorOne, double[] vectorTwo) throws NotMatchingDimensionsException { 
+        if(!(vectorOne.length == vectorTwo.length)) { throw new NotMatchingDimensionsException("The vectors have different dimensions"); }
         
         double distance = 0.0f;
         for (int i = 0; i < vectorOne.length; i++) {
@@ -24,10 +26,10 @@ public class Metrics {
      * @param vectorOne
      * @param vectorTwo
      * @return
+     * @throws NotMatchingDimensionsException
      */
-    public static double getDistanceFirstNorm(double[] vectorOne, double[] vectorTwo) { 
-        //TODO throw Exception
-        if(!(vectorOne.length == vectorTwo.length)) { return 0.0; }
+    public static double getDistanceFirstNorm(double[] vectorOne, double[] vectorTwo) throws NotMatchingDimensionsException { 
+        if(!(vectorOne.length == vectorTwo.length)) { throw new NotMatchingDimensionsException("The vectors have different dimensions"); }
 
         double distance = 0;
         

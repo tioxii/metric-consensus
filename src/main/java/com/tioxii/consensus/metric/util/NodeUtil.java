@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.tioxii.consensus.metric.api.INode;
+import com.tioxii.consensus.metric.exception.NodeGenerationException;
 
 public class NodeUtil {
     public static double[][] OPPOSING = {{0.25, 0.5},{0.75, 0.5}};
@@ -18,16 +19,14 @@ public class NodeUtil {
      * @param dimensions
      * @param positions
      * @return
+     * @throws NodeGenerationException
      */
-    public static INode[] generateNodes(Preset _preset, Class<? extends INode> clazz, int participants, int dimensions, double[][] positions) {
-        //TODO enum
+    public static INode[] generateNodes(Preset _preset, Class<? extends INode> clazz, int participants, int dimensions, double[][] positions) throws NodeGenerationException {
         switch(_preset) {
             case PRESET: return generatePreset(clazz, positions);
             case OPPOSING_CLUSTERS:
                 if(participants % 2 == 1) {
-                    //TODO throw exception
-                    System.out.println("Hello");
-                    return null;
+                    throw new NodeGenerationException("Cannot divide participants through cluster size");
                 }
                 participants /= 2;
                 return generateClusters(OPPOSING, clazz, participants);
