@@ -37,7 +37,7 @@ public class SimApp {
     
     //Evaluation
     public static boolean RECORD_RESULTS = false;
-    public static boolean RECORD_POSITIONS = true;
+    public static boolean RECORD_POSITIONS = false;
 
     //Utility
     public static int MAX_THREAD_COUNT = 6;
