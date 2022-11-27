@@ -17,6 +17,7 @@ import com.tioxii.consensus.metric.dynamics.BaseDynamic;
 import com.tioxii.consensus.metric.dynamics.BaseDynamicRandom;
 import com.tioxii.consensus.metric.dynamics.MeanValueDynamic;
 import com.tioxii.consensus.metric.dynamics.OneMajorityDynamic;
+import com.tioxii.consensus.metric.generation.ClustersAtPositions;
 import com.tioxii.consensus.metric.generation.RandomNodes;
 import com.tioxii.consensus.metric.nodes.BaseNode;
 import com.tioxii.consensus.metric.util.Iterations;
@@ -41,8 +42,7 @@ public class SimApp {
         try {
             Options options = new Options();
             log.debug(options.start + " "+ options.end + " " + options.step + " " + options.increment);
-            Simulation sim = new Simulation();
-            setUpSimulation(sim, options);
+            Simulation sim = setUpSimulation(options);
             sim.startSimulate();
         } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
@@ -104,27 +104,41 @@ public class SimApp {
         }
     }
 
+    /**
+     * Set-up node generator.
+     * @param options
+     * @return
+     */
     public static INodeGenerator setUpNodeGenerator(Options options) {
+        Class<? extends INode> clazz = setUpNodeType(options.nodetype);
+        double[][] opposing = {{0.25, 0.5}, {0.75, 0.5}};
+
         switch(options.generator) {
-            case "random": return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
+            case "random": return new RandomNodes(options.dimensions, clazz);
+            case "opposing": return new ClustersAtPositions(opposing, clazz);
             default: return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
         }
     }
 
     /**
      * Setup the Simulation
+     * @param options
      */
-    public static void setUpSimulation(Simulation sim, Options options) {
-        sim.DIMENSIONS = options.dimensions;
-        sim.SIM_ROUNDS = options.sim_rounds;
-        sim.PARTICIPATING_NODES = setUpIterations(options.increment, options.start, options.end, options.step);
-        sim.DYNAMIC = setUpDynamic(options);
-        sim.SYNCHRONOUS = options.synchronous;
-        sim.GENERATOR = setUpNodeGenerator(options);
+    public static Simulation setUpSimulation(Options options) {
+        Simulation sim = new Simulation(
+            options.dimensions,
+            options.sim_rounds,
+            setUpIterations(options.increment, options.start, options.end, options.step),
+            setUpDynamic(options),
+            options.synchronous,
+            setUpNodeGenerator(options)
+        );
 
         sim.RECORD_POSITIONS = options.record_positions;
         sim.RECORD_RESULTS = options.record_results;
         
         sim.MAX_THREAD_COUNT = MAX_THREAD_COUNT;
+
+        return sim;
     }
 }

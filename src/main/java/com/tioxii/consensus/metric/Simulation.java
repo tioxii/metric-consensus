@@ -21,12 +21,12 @@ import com.tioxii.consensus.metric.util.SampleCollection;
 public class Simulation {
     
     //Parameters
-    public int DIMENSIONS = 2;
-    public int SIM_ROUNDS = 1000;
-    public int[] PARTICIPATING_NODES = null;
-    public IDynamic DYNAMIC = null;
-    public boolean SYNCHRONOUS = true;
-    public INodeGenerator GENERATOR = null;
+    private int DIMENSIONS = 2;
+    private int SIM_ROUNDS = 1000;
+    private int[] PARTICIPATING_NODES = null;
+    private IDynamic DYNAMIC = null;
+    private boolean SYNCHRONOUS = true;
+    private INodeGenerator GENERATOR = null;
     
     //Evaluation-Settings
     public String FILE_NAME = null;
@@ -36,10 +36,27 @@ public class Simulation {
     public boolean RECORD_POSITIONS = false;
     
     //Utility
-    public ResultWriter writer = null;
-    public static Logger log = LogManager.getLogger("Simulation");
+    private ResultWriter writer = null;
+    private static Logger log = LogManager.getLogger("Simulation");
     public int MAX_THREAD_COUNT = 6;
     public static Semaphore MUTEX; //maximum threads simulating
+
+    public Simulation() {}
+
+    public Simulation(int dimensions, 
+                      int sim_rounds, 
+                      int[] participating_nodes,
+                      IDynamic dynamic,
+                      boolean synchronous,
+                      INodeGenerator generator) 
+    {
+        this.DIMENSIONS = dimensions;
+        this.SIM_ROUNDS = sim_rounds;
+        this.PARTICIPATING_NODES = participating_nodes;
+        this.DYNAMIC = dynamic;
+        this.SYNCHRONOUS = synchronous;
+        this.GENERATOR = generator;
+    }
 
     public class Data {
         public int consensusTime;
