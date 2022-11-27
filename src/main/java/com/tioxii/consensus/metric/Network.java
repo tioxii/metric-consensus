@@ -16,7 +16,7 @@ public class Network implements Runnable {
     public Thread t = null;
 
     //Logging
-    public static Logger LOGGER = LogManager.getLogger(Network.class.getName());
+    public static Logger log = LogManager.getLogger(Network.class.getName());
 
     //Measurements
     private int rounds = 0;
@@ -78,7 +78,11 @@ public class Network implements Runnable {
         do {
             INode[] newNodes = new INode[nodes.length];
             for(int i = 0; i < nodes.length; i++) {
-                newNodes[i] = dynamic.applyDynamicOn(i, nodes);
+                if(nodes[i].ishonest()) {
+                    newNodes[i] = dynamic.applyDynamicOn(i, nodes);
+                } else {
+                    newNodes[i] = nodes[i];
+                }
             }
             
             if(LOG_NODEHISTROY) {
@@ -88,7 +92,7 @@ public class Network implements Runnable {
             //update nodes
             nodes = newNodes;
             rounds++;
-            LOGGER.debug("Round: " + rounds);
+            log.debug("Round: " + rounds);
 
             //check if converged
             converged = isConsensusReached();
@@ -111,7 +115,10 @@ public class Network implements Runnable {
         boolean converged = false;
 
         do {
-            nodes[i] = dynamic.applyDynamicOn(i, nodes);
+            if(nodes[i].ishonest()) {
+                nodes[i] = dynamic.applyDynamicOn(i, nodes);
+            }
+            
             i = (i + 1) % nodes.length;
 
             if(LOG_NODEHISTROY && i == 0) {

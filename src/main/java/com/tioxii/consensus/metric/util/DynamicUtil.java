@@ -58,4 +58,13 @@ public class DynamicUtil {
 
         return opinions;
     }
+
+    public static boolean flipCoin(double beta) {
+        Random r = new Random();
+        
+        if(r.nextDouble() < beta) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -31,7 +31,7 @@ public class SampleCollection {
     public void writePositionsToCSV(ArrayList<double[][]> rounds) throws IOException {
         for (double[][] positions : rounds) {
             for(double[] pos : positions) {
-                printer.print(Arrays.toString(pos));
+                printer.print(Arrays.toString(pos).replace("[", "").replace("]", ""));
             }
             printer.println();
         }

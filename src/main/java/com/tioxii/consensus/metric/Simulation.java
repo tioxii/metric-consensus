@@ -12,42 +12,32 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tioxii.consensus.metric.api.IDynamic;
-import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
-import com.tioxii.consensus.metric.dynamics.BaseDynamic;
 import com.tioxii.consensus.metric.exception.NetworkGenerationException;
 import com.tioxii.consensus.metric.exception.NodeGenerationException;
-import com.tioxii.consensus.metric.nodes.BaseNode;
-import com.tioxii.consensus.metric.util.NodeUtil;
-import com.tioxii.consensus.metric.util.Preset;
+
 import com.tioxii.consensus.metric.util.SampleCollection;
 
 public class Simulation {
     
-    //Environment-Settings
+    //Parameters
     public int DIMENSIONS = 2;
     public int SIM_ROUNDS = 1000;
-    public int[] PARTICIPATING_NODES = {1000};
-    public boolean GENERATE_RANDOM = true;
-    public float FRACTION_DISHONEST = 0.0f;
-    public IDynamic DYNAMIC = new BaseDynamic();
-    public Class<? extends INode> NODETYPE = BaseNode.class;
+    public int[] PARTICIPATING_NODES = null;
+    public IDynamic DYNAMIC = null;
     public boolean SYNCHRONOUS = true;
-    public Preset PRESET = Preset.RANDOM;
-    public double[][] POSITIONS = null;
     public INodeGenerator GENERATOR = null;
-    public int[][] GRAPH = null;
     
     //Evaluation-Settings
     public String FILE_NAME = null;
     private String FILE_NAME_POSITIONS = null;
     public String DIR = "results/";
-    public boolean RECORD_RESULTS = true;
+    public boolean RECORD_RESULTS = false;
     public boolean RECORD_POSITIONS = false;
     
     //Utility
     public ResultWriter writer = null;
-    public static Logger LOGGER = LogManager.getLogger("Simulation");
+    public static Logger log = LogManager.getLogger("Simulation");
     public int MAX_THREAD_COUNT = 6;
     public static Semaphore MUTEX; //maximum threads simulating
 
@@ -57,6 +47,9 @@ public class Simulation {
         public double[] endMean;
     }
 
+    /**
+     * Object responsible for collecting the results of the simulation.
+     */
     private class ResultWriter {
         private SampleCollection samplePositions = null;
         private SampleCollection sampleResults = null;
@@ -93,6 +86,9 @@ public class Simulation {
         }
     }
 
+    /**
+     * Queue for the network elements.
+     */
     private class NetworkQ {
         ArrayList<Network> nets = new ArrayList<Network>();
         public static Semaphore QUEUE_ACCESS = new Semaphore(1);
@@ -143,6 +139,9 @@ public class Simulation {
     public void startSimulate() {
         MUTEX = new Semaphore(MAX_THREAD_COUNT);
         
+        log.info("Setting up file for collecting results.");
+        log.info("Log positions: " + RECORD_POSITIONS);
+        log.info("Log round results: " + RECORD_RESULTS);
         //Generate unique filenames
         if(FILE_NAME == null) {
             DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
@@ -158,7 +157,7 @@ public class Simulation {
             if(!dir.exists()) {
                 dir.mkdir();
             }
-
+            
             //Create file.
             this.writer = new ResultWriter(DIR, FILE_NAME, FILE_NAME_POSITIONS);
 
@@ -166,13 +165,13 @@ public class Simulation {
                 try {
                     simulate(i);
                 } catch (NetworkGenerationException | NodeGenerationException e) {
-                    LOGGER.error("Failed to simulate round: " + i);
+                    log.error("Failed to simulate round: " + i);
                 }
             }
             
             this.writer.close();
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -180,7 +179,14 @@ public class Simulation {
         NetworkQ nets = new NetworkQ();
         ArrayList<Data> data = new ArrayList<>();
 
-        LOGGER.info("-------Starting Simulation-------");
+        log.info("-------Starting Simulation-------");
+        log.info("Participants: " + PARTICIPATING_NODES[iteration]);
+        log.info("Byzantine-Nodes: " + 0);
+        log.info("Generator: " + GENERATOR.getClass().getSimpleName());
+        log.info("Dynamic: " + DYNAMIC.getClass().getSimpleName());
+        log.info("Simulation-Rounds: " + SIM_ROUNDS);
+        log.info("Synchronous: " + SYNCHRONOUS);
+        
 
         Thread evaluation = new Thread(() -> evaluate(nets, data));
         evaluation.setName("Evaluation");
@@ -188,7 +194,7 @@ public class Simulation {
 
         //Creating Network simulations and add them to the q.
         for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(DYNAMIC, NodeUtil.generateNodes(PRESET, NODETYPE, PARTICIPATING_NODES[iteration], DIMENSIONS, POSITIONS), SYNCHRONOUS);
+            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS);
 
             net.t = new Thread(net);
             net.t.setName(i + "");
@@ -200,28 +206,28 @@ public class Simulation {
             }
         }
 
-        LOGGER.debug("NetworkQ-Length: " + nets.size());
-        LOGGER.debug("Semaphor-Queue: " + MUTEX.hasQueuedThreads());
+        log.debug("NetworkQ-Length: " + nets.size());
+        log.debug("Semaphor-Queue: " + MUTEX.hasQueuedThreads());
 
         try {
             evaluation.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
         }
 
         //Printing Results to CSV file
         try {
             writer.writeResults(PARTICIPATING_NODES[iteration], data);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
         }
 
         int[] rounds = data.stream().map(elem -> elem.consensusTime).mapToInt(Integer::intValue).toArray();
         double average = Arrays.stream(rounds).average().getAsDouble();
 
-        LOGGER.info("-------------RESULTS-------------");
-        LOGGER.info("Average number of rounds: " + average);
+        log.info("-------------RESULTS-------------");
+        log.info("Average number of rounds: " + average);
     }
 
     public void evaluate(NetworkQ nets, ArrayList<Data> data) {
@@ -234,27 +240,27 @@ public class Simulation {
                 }
                 //Waiting for Thread to finish.
                 net.t.join();
+
+                //Collecting data
+                Data d = new Data();
+                d.consensusTime = net.getRounds();
+                d.startMean = net.startMean;
+                d.endMean = net.endMean;
+                data.add(d);
+
+                //Logging the node history of that round
+                ArrayList<double[][]> hist = net.getHistory();
+                try {
+                    writer.writePositions(hist);
+                } catch (IOException e) {
+                    log.error("Failed to log the node position history: " + e.getMessage());
+                }
+
+                log.info("Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds!");
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-
-            //Collecting data
-            Data d = new Data();
-            d.consensusTime = net.getRounds();
-            d.startMean = net.startMean;
-            d.endMean = net.endMean;
-            data.add(d);
-
-            //Logging the node history of that round
-            ArrayList<double[][]> hist = net.getHistory();
-            try {
-                writer.writePositions(hist);
-            } catch (IOException e) {
-                LOGGER.error("Failed to log the node position history: " + e.getMessage());
-            }
-
-            LOGGER.info("Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds!");
+            }       
         }
-        LOGGER.info("Evaluation done!");
+        log.info("Evaluation done!");
     }
 }
