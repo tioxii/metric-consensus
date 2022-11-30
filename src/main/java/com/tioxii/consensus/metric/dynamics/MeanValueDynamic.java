@@ -8,8 +8,8 @@ import com.tioxii.consensus.metric.util.DynamicUtil;
 
 public class MeanValueDynamic implements IDynamic {
 
-    int h = 1;
-    int roundToDigits = 18;
+    public int h = 1;
+    public int roundToDigits = 18;
 
     /**
      * Calculates the mean of h other plus itself nodes and jumps to it;

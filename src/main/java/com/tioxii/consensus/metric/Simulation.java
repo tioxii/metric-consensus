@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tioxii.consensus.metric.api.IDynamic;
+import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
 import com.tioxii.consensus.metric.exception.NetworkGenerationException;
 import com.tioxii.consensus.metric.exception.NodeGenerationException;
@@ -20,14 +21,17 @@ import com.tioxii.consensus.metric.util.SampleCollection;
 
 public class Simulation {
     
-    //Parameters
-    private int DIMENSIONS = 2;
+    //Default Parameters
     private int SIM_ROUNDS = 1000;
     private int[] PARTICIPATING_NODES = null;
-    private IDynamic DYNAMIC = null;
-    private boolean SYNCHRONOUS = true;
-    private INodeGenerator GENERATOR = null;
     
+    //Changing Parameters
+    private boolean SYNCHRONOUS = true;
+    private IDynamic DYNAMIC = null;
+    private INodeGenerator GENERATOR = null;
+    private int DIMENSIONS = 2;
+    private Class<? extends INode> NODETYPE = null;
+
     //Evaluation-Settings
     public String FILE_NAME = null;
     private String FILE_NAME_POSITIONS = null;
@@ -85,9 +89,9 @@ public class Simulation {
             }
         }
 
-        public void writeResults(int participants,ArrayList<Data> data) throws IOException {
+        public void writeResults(int participants, ArrayList<Data> data) throws IOException, IllegalArgumentException, IllegalAccessException {
             if(sampleResults != null)
-                sampleResults.writeRoundsToCSV(participants, data);
+                sampleResults.writeRoundsToCSV(participants, data, DYNAMIC);
         }
         public void writePositions(ArrayList<double[][]> positions) throws IOException {
             if(samplePositions != null)
@@ -137,11 +141,11 @@ public class Simulation {
         public Network remove() throws InterruptedException {
             if(nets.size() > 0) {
                 QUEUE_ACCESS.acquire();
-                
                 Network net = nets.remove(0);
-                MUTEX.release();
-
                 QUEUE_ACCESS.release();
+
+                net.t.join();
+                MUTEX.release();
                 
                 return net;
             }
@@ -221,6 +225,7 @@ public class Simulation {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            log.debug("Round " + i + "started!");
         }
 
         log.debug("NetworkQ-Length: " + nets.size());
@@ -236,7 +241,7 @@ public class Simulation {
         //Printing Results to CSV file
         try {
             writer.writeResults(PARTICIPATING_NODES[iteration], data);
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
             log.error(e.getMessage());
         }
 
@@ -255,8 +260,6 @@ public class Simulation {
                 while((net = nets.remove()) == null) { 
                     Thread.sleep(1000);
                 }
-                //Waiting for Thread to finish.
-                net.t.join();
 
                 //Collecting data
                 Data d = new Data();

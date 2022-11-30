@@ -1,9 +1,11 @@
 package com.tioxii.consensus.metric.dynamics;
 
+import com.tioxii.consensus.metric.api.DynamicName;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.util.DynamicUtil;
 
+@DynamicName(name = "base")
 public class BaseDynamic implements IDynamic {
     //private String metric = "euclidean";
 

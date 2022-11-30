@@ -1,15 +1,19 @@
 package com.tioxii.consensus.metric.dynamics;
 
+import com.tioxii.consensus.metric.api.DynamicName;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.util.DynamicUtil;
 
+@DynamicName(name = "base-random")
 public class BaseDynamicRandom implements IDynamic {
 
-    double beta;
+    public double beta;
+
+    public BaseDynamicRandom() {}
 
     public BaseDynamicRandom(double beta) {
-
+        this.beta = beta;
     }
 
     /**

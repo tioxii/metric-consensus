@@ -1,7 +1,5 @@
 package com.tioxii.consensus.metric.util;
 
-import com.tioxii.consensus.metric.api.StepFunction;
-
 public class Iterations {
     
     /**
@@ -12,9 +10,8 @@ public class Iterations {
      * @return
      * @throws Exception
      */
-    @StepFunction(increments = "exponential")
     public static int[] iterationsExponential(int start, int end, int steps) {
-        if(start > end && end <= 7) {
+        if(start > end && end <= 9) {
             return new int[0];
         }
         
@@ -33,9 +30,8 @@ public class Iterations {
      * @param steps
      * @return
      */
-    @StepFunction(increments = "linear")
     public static int[] iterationsLinear(int start, int end, int steps) {
-        if(start > end && end <= (int) Math.pow(2, 7)) {
+        if(start > end && end < (int) Math.pow(2, 16)) {
             return new int[0];
         }
         

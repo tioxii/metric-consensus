@@ -39,7 +39,7 @@ public class Options {
 
         Properties consensusProps = new Properties();
         File f = new File(consensusConfigPath);
-        
+
         if(f.exists()) {
             SimApp.log.info("File exists");
             consensusProps.load(new FileInputStream(f));
