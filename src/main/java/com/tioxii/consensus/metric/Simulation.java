@@ -2,6 +2,7 @@ package com.tioxii.consensus.metric;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,9 +15,10 @@ import org.apache.logging.log4j.Logger;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
-import com.tioxii.consensus.metric.exception.NetworkGenerationException;
-import com.tioxii.consensus.metric.exception.NodeGenerationException;
-
+import com.tioxii.consensus.metric.api.ITerminate;
+import com.tioxii.consensus.metric.exceptions.NetworkGenerationException;
+import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.consensus.metric.util.Parameters;
 import com.tioxii.consensus.metric.util.SampleCollection;
 
 public class Simulation {
@@ -24,13 +26,15 @@ public class Simulation {
     //Default Parameters
     private int SIM_ROUNDS = 1000;
     private int[] PARTICIPATING_NODES = null;
-    
-    //Changing Parameters
     private boolean SYNCHRONOUS = true;
-    private IDynamic DYNAMIC = null;
     private INodeGenerator GENERATOR = null;
     private int DIMENSIONS = 2;
+    private ITerminate TERMINATOR = null;
     private Class<? extends INode> NODETYPE = null;
+    private Parameters[] PARAMS = null;
+
+    //Changing Parameters
+    private IDynamic DYNAMIC = null;
 
     //Evaluation-Settings
     public String FILE_NAME = null;
@@ -45,14 +49,13 @@ public class Simulation {
     public int MAX_THREAD_COUNT = 6;
     public static Semaphore MUTEX; //maximum threads simulating
 
-    public Simulation() {}
-
     public Simulation(int dimensions, 
                       int sim_rounds, 
                       int[] participating_nodes,
                       IDynamic dynamic,
                       boolean synchronous,
-                      INodeGenerator generator) 
+                      INodeGenerator generator,
+                      ITerminate terminator) 
     {
         this.DIMENSIONS = dimensions;
         this.SIM_ROUNDS = sim_rounds;
@@ -60,6 +63,7 @@ public class Simulation {
         this.DYNAMIC = dynamic;
         this.SYNCHRONOUS = synchronous;
         this.GENERATOR = generator;
+        this.TERMINATOR = terminator;
     }
 
     public class Data {
@@ -181,6 +185,9 @@ public class Simulation {
             
             //Create file.
             this.writer = new ResultWriter(DIR, FILE_NAME, FILE_NAME_POSITIONS);
+            
+            //TODO
+            this.PARAMS = Parameters.createParameters();
 
             for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
                 try {
@@ -189,9 +196,9 @@ public class Simulation {
                     log.error("Failed to simulate round: " + i);
                 }
             }
-            
+                
             this.writer.close();
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             log.error(e.getMessage());
         }
     }
@@ -215,7 +222,7 @@ public class Simulation {
 
         //Creating Network simulations and add them to the q.
         for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS);
+            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR);
 
             net.t = new Thread(net);
             net.t.setName(i + "");

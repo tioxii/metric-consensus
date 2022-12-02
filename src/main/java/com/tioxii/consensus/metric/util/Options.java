@@ -17,6 +17,7 @@ public class Options {
     public String nodetype;
     public boolean synchronous;
     public String generator;
+    public String terminator;
 
     //Participating nodes
     public int start;
@@ -60,6 +61,7 @@ public class Options {
             this.preset = consensusProps.getProperty("preset");
             this.record_positions = Boolean.parseBoolean(((String) consensusProps.getOrDefault("record_positions", "false")).replaceAll(" ", ""));
             this.record_results = Boolean.parseBoolean(((String) consensusProps.getOrDefault("record_results", "false")).replaceAll(" ", ""));
+            this.terminator = consensusProps.getProperty("terminator");
         }
     }
 }

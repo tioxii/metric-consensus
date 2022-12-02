@@ -1,4 +1,4 @@
-package com.tioxii.consensus.metric.exception;
+package com.tioxii.consensus.metric.exceptions;
 
 public class NotMatchingDimensionsException extends Exception {
     

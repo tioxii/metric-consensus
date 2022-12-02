@@ -1,6 +1,6 @@
 package com.tioxii.consensus.metric.util;
 
-import com.tioxii.consensus.metric.exception.NotMatchingDimensionsException;
+import com.tioxii.consensus.metric.exceptions.NotMatchingDimensionsException;
 
 public class Metrics {
     

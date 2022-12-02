@@ -5,4 +5,5 @@ public interface INode {
     double[] askOpinion();
     boolean equals(INode node);
     boolean ishonest();
+    void setDishonest();
 }

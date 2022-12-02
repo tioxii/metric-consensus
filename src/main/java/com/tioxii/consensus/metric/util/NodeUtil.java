@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.tioxii.consensus.metric.api.INode;
-import com.tioxii.consensus.metric.exception.NodeGenerationException;
+import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
 
 @Deprecated
 public class NodeUtil {

@@ -7,11 +7,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
+import com.tioxii.consensus.metric.api.ITerminate;
+import com.tioxii.consensus.metric.termination.NumberOfClusterTermination;
 
 public class Network implements Runnable {
     //Environment constraints
     private IDynamic dynamic;
     private INode[] nodes = null;
+    private ITerminate terminate = new NumberOfClusterTermination();
     private boolean isSynchronous = true;
     public Thread t = null;
 
@@ -31,10 +34,11 @@ public class Network implements Runnable {
      * @param nodes
      * @param isSynchronous
      */
-    public Network(IDynamic dynamic, INode[] nodes, boolean isSynchronous) {
+    public Network(IDynamic dynamic, INode[] nodes, boolean isSynchronous, ITerminate terminator) {
         this.dynamic = dynamic;
         this.nodes = nodes;
         this.isSynchronous = isSynchronous;
+        this.terminate = terminator;
     }
     
     /**
@@ -95,7 +99,7 @@ public class Network implements Runnable {
             log.debug("Round: " + rounds);
 
             //check if converged
-            converged = isConsensusReached();
+            converged = terminate.shouldTerminate(nodes);
         } while (!converged);
 
         if(LOG_NODEHISTROY) {
@@ -128,7 +132,7 @@ public class Network implements Runnable {
             rounds++;
             
             //check if converged
-            converged = isConsensusReached();
+            converged = terminate.shouldTerminate(nodes);
         } while (!converged);
 
         if(LOG_NODEHISTROY) {

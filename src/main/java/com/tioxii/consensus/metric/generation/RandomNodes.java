@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
-import com.tioxii.consensus.metric.exception.NodeGenerationException;
+import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
 
 public class RandomNodes implements INodeGenerator {
 

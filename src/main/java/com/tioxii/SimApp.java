@@ -13,13 +13,19 @@ import com.tioxii.consensus.metric.Simulation;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
+import com.tioxii.consensus.metric.api.ITerminate;
 import com.tioxii.consensus.metric.dynamics.BaseDynamic;
 import com.tioxii.consensus.metric.dynamics.BaseDynamicRandom;
 import com.tioxii.consensus.metric.dynamics.MeanValueDynamic;
 import com.tioxii.consensus.metric.dynamics.OneMajorityDynamic;
+import com.tioxii.consensus.metric.generation.Circle;
 import com.tioxii.consensus.metric.generation.ClustersAtPositions;
+import com.tioxii.consensus.metric.generation.OneByzantineCluster;
 import com.tioxii.consensus.metric.generation.RandomNodes;
 import com.tioxii.consensus.metric.nodes.BaseNode;
+import com.tioxii.consensus.metric.termination.BaseTermination;
+import com.tioxii.consensus.metric.termination.FiftyPercentTermination;
+import com.tioxii.consensus.metric.termination.NumberOfClusterTermination;
 import com.tioxii.consensus.metric.util.Iterations;
 import com.tioxii.consensus.metric.util.Options;
 
@@ -116,7 +122,19 @@ public class SimApp {
         switch(options.generator) {
             case "random": return new RandomNodes(options.dimensions, clazz);
             case "opposing": return new ClustersAtPositions(opposing, clazz);
+            case "circle": return new Circle(500, clazz);
+            case "byzantine": return new OneByzantineCluster(options.fraction_dishonest, opposing[0], opposing[1], clazz);
             default: return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
+        }
+    }
+
+    public static ITerminate setUpTerminator(String type) {
+        double[] byzantine_position = {0.75, 0.5};
+        switch(type) {
+            case "two-clusters": return new NumberOfClusterTermination();
+            case "base": return new BaseTermination();
+            case "fifty": return new FiftyPercentTermination(byzantine_position);
+            default: return new BaseTermination();
         }
     }
 
@@ -131,7 +149,8 @@ public class SimApp {
             setUpIterations(options.increment, options.start, options.end, options.step),
             setUpDynamic(options),
             options.synchronous,
-            setUpNodeGenerator(options)
+            setUpNodeGenerator(options),
+            setUpTerminator(options.terminator)
         );
 
         sim.RECORD_POSITIONS = options.record_positions;

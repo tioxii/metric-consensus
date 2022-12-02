@@ -70,6 +70,7 @@ public class BaseNode implements INode {
     /**
      * Makes this node dishonest.
      */
+    @Override
     public void setDishonest() {
         this.isHonest = false;
     }
