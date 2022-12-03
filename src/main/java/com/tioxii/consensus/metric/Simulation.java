@@ -182,9 +182,6 @@ public class Simulation {
             
             //Create file.
             this.writer = new ResultWriter(DIR, FILE_NAME, FILE_NAME_POSITIONS);
-            
-            //TODO
-            this.PARAMS = Parameters.createParameters();
 
             for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
                 try {
@@ -195,7 +192,7 @@ public class Simulation {
             }
                 
             this.writer.close();
-        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+        } catch (IOException | IllegalArgumentException | SecurityException e) {
             log.error(e.getMessage());
         }
     }
