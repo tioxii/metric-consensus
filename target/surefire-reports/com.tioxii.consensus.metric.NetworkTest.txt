@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.tioxii.consensus.metric.NetworkTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.303 s <<< FAILURE! - in com.tioxii.consensus.metric.NetworkTest
-testConsensusReached(com.tioxii.consensus.metric.NetworkTest)  Time elapsed: 0.303 s  <<< FAILURE!
-java.lang.AssertionError
-	at com.tioxii.consensus.metric.NetworkTest.testConsensusReached(NetworkTest.java:33)
-

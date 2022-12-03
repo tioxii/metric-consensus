@@ -1,6 +1,7 @@
 package com.tioxii.consensus.metric;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,8 +9,10 @@ import org.apache.logging.log4j.Logger;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.ITerminate;
+import com.tioxii.math.Distance;
+import com.tioxii.util.IThreadQueueElement;
 
-public class Network implements Runnable {
+public class Network implements Runnable, IThreadQueueElement {
     //Environment constraints
     private IDynamic dynamic;
     private INode[] nodes = null;
@@ -45,7 +48,9 @@ public class Network implements Runnable {
      * @return State of consensus
      */
     public void run() {
-        startMean = calculateMean();
+        double[][] opinions = Arrays.stream(nodes).map(node -> node.getOpinion()).toArray(double[][]::new);
+        
+        startMean = Distance.calculateMean(opinions);
         
         //when synchronous, all nodes are updated at the same time
         //when asynchronous, nodes are updated one at a time
@@ -54,21 +59,8 @@ public class Network implements Runnable {
         } else {
             asynchronous();
         }
-        
-        endMean = calculateMean();
-    }
 
-    /**
-     * Is Consensus Reached?
-     * @return
-     */
-    public boolean isConsensusReached() {
-        //checks if the opinion of all nodes is the same
-        for (int i = 1; i < nodes.length; i++) {
-            if(!nodes[0].equals(nodes[i]))
-                return false;    
-        }
-        return true;
+        endMean = Distance.calculateMean(opinions);
     }
 
     /**
@@ -142,14 +134,7 @@ public class Network implements Runnable {
     }
 
     private void logHistory() {
-        double[][] round = new double[nodes.length][];
-        for (int i = 0; i < nodes.length; i++) {
-            round[i] = new double[nodes[i].getOpinion().length];
-            for (int j = 0; j < round[i].length; j++) {
-                round[i][j] = nodes[i].getOpinion()[j];
-            }
-            
-        }
+        double[][] round = Arrays.stream(nodes).map(node -> node.getOpinion()).toArray(double[][]::new);
         nodesHistroy.add(round);
     }
 
@@ -167,23 +152,12 @@ public class Network implements Runnable {
         return this.nodesHistroy;
     }
 
-    /**
-     * Calculate the mean position of all nodes
-     * @return
-     */
-    public double[] calculateMean() {
-        double[] mean = new double[nodes[0].getOpinion().length];
-        
-        for(int i = 0; i < nodes.length; i++) {
-            for (int j = 0; j < nodes[i].getOpinion().length; j++) {
-                mean[j] += (nodes[i].getOpinion()[j] / nodes.length);
-            }
-        }
-
-        return mean;
-    }
-
     public INode[] getNodes() {
         return nodes;
+    }
+
+    @Override
+    public Thread getThread() {
+        return t;
     }
 }

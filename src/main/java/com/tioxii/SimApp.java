@@ -35,7 +35,7 @@ import com.tioxii.consensus.metric.util.Options;
  */
 public class SimApp {
     //Utility
-    public static int MAX_THREAD_COUNT = 1;
+    public static int MAX_THREAD_COUNT = 6;
 
     //Logging
     public static final Level LEVEL = Level.INFO;

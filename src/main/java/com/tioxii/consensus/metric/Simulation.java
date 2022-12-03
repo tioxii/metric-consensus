@@ -17,6 +17,7 @@ import com.tioxii.consensus.metric.api.ITerminate;
 import com.tioxii.consensus.metric.exceptions.NetworkGenerationException;
 import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
 import com.tioxii.consensus.metric.util.SampleCollection;
+import com.tioxii.util.ThreadQueue;
 
 public class Simulation {
     
@@ -42,7 +43,8 @@ public class Simulation {
     private ResultWriter writer = null;
     private static Logger log = LogManager.getLogger("Simulation");
     public int MAX_THREAD_COUNT = 6;
-    public static Semaphore MUTEX; //maximum threads simulating
+    public static Semaphore MUTEX = null; //maximum threads simulating
+    private ThreadQueue<Network> QUEUE = null;
 
     public Simulation(int dimensions, 
                       int sim_rounds, 
@@ -107,57 +109,10 @@ public class Simulation {
     }
 
     /**
-     * Queue for the network elements.
+     * Start the simulation.
      */
-    private class NetworkQ {
-        ArrayList<Network> nets = new ArrayList<Network>();
-        public static Semaphore QUEUE_ACCESS = new Semaphore(1);
-
-        /*
-         * Get the last Element
-         */
-        public void add(Network e) throws InterruptedException, NetworkGenerationException {
-            
-            if(e != null) {
-                MUTEX.acquire();
-
-                QUEUE_ACCESS.acquire();
-
-                nets.add(e);
-                e.t.start();
-
-                QUEUE_ACCESS.release();
-            } else {
-                throw new NetworkGenerationException("Network is null!");
-            }
-        }
-
-        /**
-         * Get the first element
-         * @return
-         * @throws InterruptedException
-         */
-        public Network remove() throws InterruptedException {
-            if(nets.size() > 0) {
-                QUEUE_ACCESS.acquire();
-                Network net = nets.remove(0);
-                QUEUE_ACCESS.release();
-
-                net.t.join();
-                MUTEX.release();
-                
-                return net;
-            }
-            return null;
-        }
-
-        public int size() {
-            return nets.size();
-        }
-    }
-
     public void startSimulate() {
-        MUTEX = new Semaphore(MAX_THREAD_COUNT);
+        QUEUE = new ThreadQueue<>(MAX_THREAD_COUNT);
         
         log.info("Setting up file for collecting results.");
         log.info("Log positions: " + RECORD_POSITIONS);
@@ -195,8 +150,13 @@ public class Simulation {
         }
     }
 
+    /**
+     * Starts a simulation iteration.
+     * @param iteration
+     * @throws NetworkGenerationException
+     * @throws NodeGenerationException
+     */
     public void simulate(int iteration) throws NetworkGenerationException, NodeGenerationException {
-        NetworkQ nets = new NetworkQ();
         ArrayList<Data> data = new ArrayList<>();
 
         log.info("-------Starting Simulation-------");
@@ -207,8 +167,7 @@ public class Simulation {
         log.info("Simulation-Rounds: " + SIM_ROUNDS);
         log.info("Synchronous: " + SYNCHRONOUS);
         
-
-        Thread evaluation = new Thread(() -> evaluate(nets, data));
+        Thread evaluation = new Thread(() -> evaluate(data));
         evaluation.setName("Evaluation");
         evaluation.start();
 
@@ -220,15 +179,12 @@ public class Simulation {
             net.t.setName(i + "");
 
             try {
-                nets.add(net);
+                QUEUE.add(net);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             log.debug("Round " + i + "started!");
         }
-
-        log.debug("NetworkQ-Length: " + nets.size());
-        log.debug("Semaphor-Queue: " + MUTEX.hasQueuedThreads());
 
         try {
             evaluation.join();
@@ -251,14 +207,12 @@ public class Simulation {
         log.info("Average number of rounds: " + average);
     }
 
-    public void evaluate(NetworkQ nets, ArrayList<Data> data) {
+    public void evaluate(ArrayList<Data> data) {
         Network net = null;
 
         for (int i = 0; i < SIM_ROUNDS; i++) {
             try {
-                while((net = nets.remove()) == null) { 
-                    Thread.sleep(1000);
-                }
+                net = QUEUE.remove();
 
                 //Collecting data
                 Data d = new Data();

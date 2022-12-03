@@ -2,7 +2,6 @@ package com.tioxii.consensus.metric.util;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import com.tioxii.consensus.metric.api.INode;
 
@@ -22,22 +21,6 @@ public class DynamicUtil {
            e.printStackTrace();
         }
         return ret;
-    }
-
-    @Deprecated
-    public static double[][] selectRandomOpinion1(int index, int h, INode[] nodes) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        IntStream.range(0, nodes.length).forEach(val -> list.add(val)); 
-        
-        double[][] opinions = new double[h+1][];
-        Random r = new Random();
-
-        opinions[h] = nodes[(list.remove(index))].getOpinion();
-
-        for(int i = 0; i < h; i++) {
-            opinions[i] = nodes[list.remove(r.nextInt(list.size()))].getOpinion();
-        }
-        return opinions;
     }
 
     public static double[][] selectRandomOpinion(int index, int h, INode[] nodes) {

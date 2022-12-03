@@ -1,7 +1,6 @@
 package com.tioxii.consensus.metric;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -24,8 +23,6 @@ public class NetworkTest {
         }
 
         Network netEqual = new Network(new BaseDynamic(), nodesEqual, true, new BaseTermination());        
-
-        assertTrue(netEqual.isConsensusReached());
     }
 
     @Test
@@ -39,8 +36,6 @@ public class NetworkTest {
         }
 
         Network netNotEqual = new Network(new BaseDynamic(), nodesNotEqual, true, new BaseTermination());
-
-        assertTrue(!netNotEqual.isConsensusReached());
     }
     
     @Test
