@@ -2,7 +2,6 @@ package com.tioxii.consensus.metric;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import com.tioxii.consensus.metric.api.INodeGenerator;
 import com.tioxii.consensus.metric.api.ITerminate;
 import com.tioxii.consensus.metric.exceptions.NetworkGenerationException;
 import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.consensus.metric.util.Parameters;
 import com.tioxii.consensus.metric.util.SampleCollection;
 
 public class Simulation {
