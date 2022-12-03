@@ -166,6 +166,7 @@ public class Simulation {
         log.info("Dynamic: " + DYNAMIC.getClass().getSimpleName());
         log.info("Simulation-Rounds: " + SIM_ROUNDS);
         log.info("Synchronous: " + SYNCHRONOUS);
+        log.info("Termination:" + TERMINATOR.getClass().getSimpleName());
         
         Thread evaluation = new Thread(() -> evaluate(data));
         evaluation.setName("Evaluation");

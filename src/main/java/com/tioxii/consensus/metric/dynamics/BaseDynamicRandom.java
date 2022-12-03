@@ -3,7 +3,7 @@ package com.tioxii.consensus.metric.dynamics;
 import com.tioxii.consensus.metric.api.DynamicName;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
-import com.tioxii.consensus.metric.util.DynamicUtil;
+import com.tioxii.math.RandomMethods;
 
 @DynamicName(name = "base-random")
 public class BaseDynamicRandom implements IDynamic {
@@ -22,7 +22,7 @@ public class BaseDynamicRandom implements IDynamic {
     @Override
     public INode applyDynamicOn(int index, INode[] nodes) {
 
-        if(DynamicUtil.flipCoin(this.beta)) {
+        if(RandomMethods.flipCoin(this.beta)) {
             return new OneMajorityDynamic().applyDynamicOn(index, nodes);
         } else {
             return new BaseDynamic().applyDynamicOn(index, nodes);

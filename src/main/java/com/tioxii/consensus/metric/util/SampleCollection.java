@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -37,13 +36,15 @@ public class SampleCollection {
     }
 
     public void writePositionsToCSV(ArrayList<double[][]> rounds) throws IOException {
-        for (double[][] positions : rounds) {
-            for(double[] pos : positions) {
-                printer.print(Arrays.toString(pos).replace("[", "").replace("]", ""));
+        for (int i = 0; i < rounds.size(); i++) {
+            for(double[] pos : rounds.get(i)) {
+                printer.print(i);
+                for (double coordinate : pos) {
+                    printer.print(coordinate);
+                }
+                printer.println();
             }
-            printer.println();
         }
-        printer.println();
     }
 
     public void close() throws IOException {

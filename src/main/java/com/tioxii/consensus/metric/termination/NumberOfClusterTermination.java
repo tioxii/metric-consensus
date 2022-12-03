@@ -11,7 +11,7 @@ public class NumberOfClusterTermination implements ITerminate {
     @Override
     public boolean shouldTerminate(INode[] nodes) {
         ArrayList<double[]> set = new ArrayList<double[]>();
-        boolean hasElement = false;
+        boolean hasElement = true;
 
         for(int i = 0; i < nodes.length; i++) {
             for(int j = 0; j < set.size(); j++) {
@@ -25,6 +25,8 @@ public class NumberOfClusterTermination implements ITerminate {
             }
             if(set.size() > 2)
                 return false;
+
+            hasElement = false;
         }
         return true;
     }

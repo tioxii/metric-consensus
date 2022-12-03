@@ -21,7 +21,6 @@ public class MeanValueDynamic implements IDynamic {
         this.roundToDigits = roundToDigits;
     }
     
-    
     @Override
     public INode applyDynamicOn(int index, INode[] nodes) {
         double[][] opinions = DynamicUtil.selectRandomOpinion(index, h, nodes);

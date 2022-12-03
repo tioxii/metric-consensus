@@ -122,7 +122,7 @@ public class SimApp {
         switch(options.generator) {
             case "random": return new RandomNodes(options.dimensions, clazz);
             case "opposing": return new ClustersAtPositions(opposing, clazz);
-            case "circle": return new Circle(500, clazz);
+            case "circle": return new Circle(50, clazz);
             case "byzantine": return new OneByzantineCluster(options.fraction_dishonest, opposing[0], opposing[1], clazz);
             default: return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
         }
