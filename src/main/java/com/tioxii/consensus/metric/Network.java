@@ -8,13 +8,12 @@ import org.apache.logging.log4j.Logger;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.ITerminate;
-import com.tioxii.consensus.metric.termination.NumberOfClusterTermination;
 
 public class Network implements Runnable {
     //Environment constraints
     private IDynamic dynamic;
     private INode[] nodes = null;
-    private ITerminate terminate = new NumberOfClusterTermination();
+    private ITerminate terminate = null;
     private boolean isSynchronous = true;
     public Thread t = null;
 

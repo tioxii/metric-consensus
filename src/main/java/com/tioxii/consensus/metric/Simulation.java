@@ -13,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tioxii.consensus.metric.api.IDynamic;
-import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
 import com.tioxii.consensus.metric.api.ITerminate;
 import com.tioxii.consensus.metric.exceptions.NetworkGenerationException;
@@ -30,8 +29,6 @@ public class Simulation {
     private INodeGenerator GENERATOR = null;
     private int DIMENSIONS = 2;
     private ITerminate TERMINATOR = null;
-    private Class<? extends INode> NODETYPE = null;
-    private Parameters[] PARAMS = null;
 
     //Changing Parameters
     private IDynamic DYNAMIC = null;
