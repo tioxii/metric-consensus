@@ -117,6 +117,7 @@ public class Simulation {
         log.info("Setting up file for collecting results.");
         log.info("Log positions: " + RECORD_POSITIONS);
         log.info("Log round results: " + RECORD_RESULTS);
+
         //Generate unique filenames
         if(FILE_NAME == null) {
             DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
@@ -168,6 +169,9 @@ public class Simulation {
         log.info("Synchronous: " + SYNCHRONOUS);
         log.info("Termination:" + TERMINATOR.getClass().getSimpleName());
         
+        long startTime = System.nanoTime();
+
+        //Start thread for evaluation.
         Thread evaluation = new Thread(() -> evaluate(data));
         evaluation.setName("Evaluation");
         evaluation.start();
@@ -175,7 +179,6 @@ public class Simulation {
         //Creating Network simulations and add them to the q.
         for(int i = 0; i < SIM_ROUNDS; i++) {
             Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR);
-
             net.t = new Thread(net);
             net.t.setName(i + "");
 
@@ -187,6 +190,7 @@ public class Simulation {
             log.debug("Round " + i + "started!");
         }
 
+        //Waiting for the evaluation to be done.
         try {
             evaluation.join();
         } catch (InterruptedException e) {
@@ -194,18 +198,23 @@ public class Simulation {
             log.error(e.getMessage());
         }
 
-        //Printing Results to CSV file
+        //Printing Results to CSV file.
         try {
             writer.writeResults(PARTICIPATING_NODES[iteration], data);
         } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
             log.error(e.getMessage());
         }
 
+        //Summary of the results.
         int[] rounds = data.stream().map(elem -> elem.consensusTime).mapToInt(Integer::intValue).toArray();
         double average = Arrays.stream(rounds).average().getAsDouble();
+        
+        long endTime = System.nanoTime();
+        double totalTime = (double) (endTime - startTime) / 1000000000;
 
         log.info("-------------RESULTS-------------");
         log.info("Average number of rounds: " + average);
+        log.info("Time: " + totalTime + "s");
     }
 
     public void evaluate(ArrayList<Data> data) {

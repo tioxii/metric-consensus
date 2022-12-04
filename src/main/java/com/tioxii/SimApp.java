@@ -24,6 +24,7 @@ import com.tioxii.consensus.metric.generation.OneByzantineCluster;
 import com.tioxii.consensus.metric.generation.RandomNodes;
 import com.tioxii.consensus.metric.nodes.BaseNode;
 import com.tioxii.consensus.metric.termination.BaseTermination;
+import com.tioxii.consensus.metric.termination.EpsilonTermination;
 import com.tioxii.consensus.metric.termination.FiftyPercentTermination;
 import com.tioxii.consensus.metric.termination.NumberOfClusterTermination;
 import com.tioxii.consensus.metric.util.Iterations;
@@ -78,7 +79,7 @@ public class SimApp {
             case "base": return new BaseDynamic();
             case "base-random": return new BaseDynamicRandom(option.beta);
             case "one-majority": return new OneMajorityDynamic();
-            case "mean-value": return new MeanValueDynamic(option.h, 5);
+            case "mean-value": return new MeanValueDynamic(option.h);
             default: return new BaseDynamic();
         }
     }
@@ -128,12 +129,13 @@ public class SimApp {
         }
     }
 
-    public static ITerminate setUpTerminator(String type) {
+    public static ITerminate setUpTerminator(Options options) {
         double[] byzantine_position = {0.75, 0.5};
-        switch(type) {
+        switch(options.terminator) {
             case "two-clusters": return new NumberOfClusterTermination();
             case "base": return new BaseTermination();
             case "fifty": return new FiftyPercentTermination(byzantine_position);
+            case "epsilon": return new EpsilonTermination(options.epsilon);
             default: return new BaseTermination();
         }
     }
@@ -150,7 +152,7 @@ public class SimApp {
             setUpDynamic(options),
             options.synchronous,
             setUpNodeGenerator(options),
-            setUpTerminator(options.terminator)
+            setUpTerminator(options)
         );
 
         sim.RECORD_POSITIONS = options.record_positions;

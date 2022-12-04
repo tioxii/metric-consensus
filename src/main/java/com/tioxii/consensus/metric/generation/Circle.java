@@ -7,11 +7,14 @@ import java.util.Collections;
 
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
+import com.tioxii.consensus.metric.api.Parameter;
 import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
 
 public class Circle implements INodeGenerator {
 
+    @Parameter(shouldPrint = true)
     public int numberOfClusters;
+    
     private Class<? extends INode> type;
 
     public Circle(int numberOfClusters, Class<? extends INode> type) {

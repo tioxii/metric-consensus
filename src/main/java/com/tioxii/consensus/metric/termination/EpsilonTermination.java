@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.ITerminate;
+import com.tioxii.consensus.metric.api.Parameter;
 import com.tioxii.math.Distance;
 import com.tioxii.math.exceptions.DifferentDimensionsException;
 
 public class EpsilonTermination implements ITerminate {
 
+    @Parameter(shouldPrint = true)
     public double epsilon;
 
     public EpsilonTermination(double epsilon) {

@@ -33,7 +33,9 @@ public class Options {
     public boolean record_positions;
     public boolean record_results;
     public String preset;
-    
+
+    //Termination specific parameters
+    public double epsilon;
 
     public Options() throws FileNotFoundException, IOException, NumberFormatException {
         String consensusConfigPath = "consensus.properties";
@@ -62,6 +64,7 @@ public class Options {
             this.record_positions = Boolean.parseBoolean(((String) consensusProps.getOrDefault("record_positions", "false")).replaceAll(" ", ""));
             this.record_results = Boolean.parseBoolean(((String) consensusProps.getOrDefault("record_results", "false")).replaceAll(" ", ""));
             this.terminator = consensusProps.getProperty("terminator");
+            this.epsilon = Double.parseDouble(consensusProps.getProperty("epsilon").replaceAll(" ", ""));
         }
     }
 }

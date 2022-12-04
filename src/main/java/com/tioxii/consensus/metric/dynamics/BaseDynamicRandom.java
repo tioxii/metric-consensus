@@ -3,11 +3,13 @@ package com.tioxii.consensus.metric.dynamics;
 import com.tioxii.consensus.metric.api.DynamicName;
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
+import com.tioxii.consensus.metric.api.Parameter;
 import com.tioxii.math.RandomMethods;
 
 @DynamicName(name = "base-random")
 public class BaseDynamicRandom implements IDynamic {
 
+    @Parameter(shouldPrint = true)
     public double beta;
 
     public BaseDynamicRandom() {}
