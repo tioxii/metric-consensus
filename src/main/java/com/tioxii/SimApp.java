@@ -35,9 +35,6 @@ import com.tioxii.consensus.metric.util.Options;
  *
  */
 public class SimApp {
-    //Utility
-    public static int MAX_THREAD_COUNT = 6;
-
     //Logging
     public static final Level LEVEL = Level.INFO;
     public static final Logger log = LogManager.getLogger("Simulation");
@@ -158,7 +155,10 @@ public class SimApp {
         sim.RECORD_POSITIONS = options.record_positions;
         sim.RECORD_RESULTS = options.record_results;
         
-        sim.MAX_THREAD_COUNT = MAX_THREAD_COUNT;
+        if(!options.file_name.equals("none"))
+            sim.FILE_NAME = options.file_name;
+
+        sim.MAX_THREAD_COUNT = options.max_thread_count;
         return sim;
     }
 }

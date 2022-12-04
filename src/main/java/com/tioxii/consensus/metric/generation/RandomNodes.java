@@ -4,13 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
-import com.tioxii.consensus.metric.api.Parameter;
 import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.util.Parameter;
 
 public class RandomNodes implements INodeGenerator {
 
-    @Parameter(shouldPrint = true)
-    private int dimension;
+    @Parameter(isParameter = false, name = "Dimension")
+    public int dimension;
     Class<? extends INode> clazz;
 
     public RandomNodes(int dimension, Class<? extends INode> clazz) {

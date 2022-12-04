@@ -2,12 +2,12 @@ package com.tioxii.consensus.metric.dynamics;
 
 import com.tioxii.consensus.metric.api.IDynamic;
 import com.tioxii.consensus.metric.api.INode;
-import com.tioxii.consensus.metric.api.Parameter;
 import com.tioxii.consensus.metric.util.DynamicUtil;
+import com.tioxii.util.Parameter;
 
 public class MeanValueDynamic implements IDynamic {
 
-    @Parameter(shouldPrint = true)
+    @Parameter(isParameter = true, name = "h")
     public int h = 1;
 
     /**

@@ -17,15 +17,20 @@ public class OneByzantineClusterTest {
         double[] honestClusterPosition = {0.25,0.5};
         double[] byzantineClusterPosition = {0.75, 0.5};
         Class<? extends INode> type = BaseNode.class;
+        INode[] nodes = null;
 
         OneByzantineCluster generator = new OneByzantineCluster(0.5, honestClusterPosition, byzantineClusterPosition, type);
 
         try {
-            INode[] nodes = generator.generate(number);
-            assertEquals(number, nodes.length);
+            nodes = generator.generate(number);
+            
         } catch (NodeGenerationException e) {
             e.printStackTrace();
-        }
+        }   
+        int l = -1;
+        if(nodes != null)
+            l = nodes.length;
 
+        assertEquals(number, l);
     }
 }

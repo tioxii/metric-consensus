@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +15,8 @@ import com.tioxii.consensus.metric.api.INodeGenerator;
 import com.tioxii.consensus.metric.api.ITerminate;
 import com.tioxii.consensus.metric.exceptions.NetworkGenerationException;
 import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.consensus.metric.util.SampleCollection;
+import com.tioxii.consensus.metric.util.SampleData;
+import com.tioxii.util.ReflectionMethods;
 import com.tioxii.util.ThreadQueue;
 
 public class Simulation {
@@ -25,12 +25,13 @@ public class Simulation {
     private int SIM_ROUNDS = 1000;
     private int[] PARTICIPATING_NODES = null;
     private boolean SYNCHRONOUS = true;
-    private INodeGenerator GENERATOR = null;
-    private int DIMENSIONS = 2;
-    private ITerminate TERMINATOR = null;
 
-    //Changing Parameters
+    private INodeGenerator GENERATOR = null;
+    private ITerminate TERMINATOR = null;
     private IDynamic DYNAMIC = null;
+
+    private String[] PARAMETER = null;
+    private String[] PARAMETER_NAMES = null;
 
     //Evaluation-Settings
     public String FILE_NAME = null;
@@ -40,11 +41,11 @@ public class Simulation {
     public boolean RECORD_POSITIONS = false;
     
     //Utility
-    private ResultWriter writer = null;
     private static Logger log = LogManager.getLogger("Simulation");
     public int MAX_THREAD_COUNT = 6;
-    public static Semaphore MUTEX = null; //maximum threads simulating
     private ThreadQueue<Network> QUEUE = null;
+    private SampleData dataCollection = null;
+    private SampleData positionCollection = null;
 
     public Simulation(int dimensions, 
                       int sim_rounds, 
@@ -54,58 +55,38 @@ public class Simulation {
                       INodeGenerator generator,
                       ITerminate terminator) 
     {
-        this.DIMENSIONS = dimensions;
         this.SIM_ROUNDS = sim_rounds;
         this.PARTICIPATING_NODES = participating_nodes;
         this.DYNAMIC = dynamic;
         this.SYNCHRONOUS = synchronous;
         this.GENERATOR = generator;
         this.TERMINATOR = terminator;
+
+        //Parameters to be collected
+        Object[] objects = new Object[3];
+
+        objects[0] = GENERATOR;
+        objects[1] = DYNAMIC;
+        objects[2] = TERMINATOR;
+
+        try {
+            PARAMETER = ReflectionMethods.extractParametersFromFields(objects);
+            String[] names = ReflectionMethods.getParameterNames(objects);
+            PARAMETER_NAMES = new String[names.length + 2];
+            PARAMETER_NAMES[0] = "Participants";
+            PARAMETER_NAMES[1] = "Rounds";
+            for(int i = 2; i < PARAMETER_NAMES.length; i++) {
+                PARAMETER_NAMES[i] = names[i - 2];
+            }
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public class Data {
         public int consensusTime;
         public double[] startMean;
         public double[] endMean;
-    }
-
-    /**
-     * Object responsible for collecting the results of the simulation.
-     */
-    private class ResultWriter {
-        private SampleCollection samplePositions = null;
-        private SampleCollection sampleResults = null;
-
-        public ResultWriter(String dir, String fileResults, String filePositions) throws IOException {
-            if(RECORD_POSITIONS) {
-                File f = new File(dir + filePositions);
-                f.createNewFile();
-                this.samplePositions = new SampleCollection(f, false);
-            }
-
-            if(RECORD_RESULTS) {
-                File f = new File(dir + fileResults);
-                f.createNewFile();
-                this.sampleResults = new SampleCollection(f, true);
-            }
-        }
-
-        public void writeResults(int participants, ArrayList<Data> data) throws IOException, IllegalArgumentException, IllegalAccessException {
-            if(sampleResults != null)
-                sampleResults.writeRoundsToCSV(participants, data, DYNAMIC);
-        }
-        public void writePositions(ArrayList<double[][]> positions) throws IOException {
-            if(samplePositions != null)
-                samplePositions.writePositionsToCSV(positions);
-        }
-
-        public void close() throws IOException {
-            if(samplePositions != null)
-                samplePositions.close();
-
-            if(sampleResults != null)
-                sampleResults.close();
-        }
     }
 
     /**
@@ -123,10 +104,12 @@ public class Simulation {
             DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
             LocalDateTime dateTime = LocalDateTime.now();
             String formattedDate = dateTime.format(timeFormat);
-            FILE_NAME = formattedDate + "_DIM-" + DIMENSIONS + "_R-" + SIM_ROUNDS + "_SYNC-" + SYNCHRONOUS + ".csv";
+            FILE_NAME = formattedDate;
         } 
+        FILE_NAME += "_R-" + SIM_ROUNDS + "_SYNC-" + SYNCHRONOUS;
         FILE_NAME_POSITIONS = FILE_NAME + "_POSITIONS" + ".csv";
-        
+        FILE_NAME += ".csv";
+
         try {
             //Create directory if it doesn't exist.
             File dir = new File(DIR);
@@ -134,9 +117,12 @@ public class Simulation {
                 dir.mkdir();
             }
             
-            //Create file.
-            this.writer = new ResultWriter(DIR, FILE_NAME, FILE_NAME_POSITIONS);
+            if(RECORD_RESULTS)
+                dataCollection = new SampleData(new File(DIR + FILE_NAME), PARAMETER_NAMES);
 
+            if(RECORD_POSITIONS)
+                positionCollection = new SampleData(new File(DIR + FILE_NAME_POSITIONS), null);
+            
             for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
                 try {
                     simulate(i);
@@ -145,7 +131,10 @@ public class Simulation {
                 }
             }
                 
-            this.writer.close();
+            if(dataCollection != null) 
+                this.dataCollection.close();
+            if(positionCollection != null) 
+                this.positionCollection.close();
         } catch (IOException | IllegalArgumentException | SecurityException e) {
             log.error(e.getMessage());
         }
@@ -167,7 +156,7 @@ public class Simulation {
         log.info("Dynamic: " + DYNAMIC.getClass().getSimpleName());
         log.info("Simulation-Rounds: " + SIM_ROUNDS);
         log.info("Synchronous: " + SYNCHRONOUS);
-        log.info("Termination:" + TERMINATOR.getClass().getSimpleName());
+        log.info("Termination: " + TERMINATOR.getClass().getSimpleName());
         
         long startTime = System.nanoTime();
 
@@ -199,10 +188,12 @@ public class Simulation {
         }
 
         //Printing Results to CSV file.
-        try {
-            writer.writeResults(PARTICIPATING_NODES[iteration], data);
-        } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
-            log.error(e.getMessage());
+        if(dataCollection != null) {
+            try {
+                dataCollection.print(PARTICIPATING_NODES[iteration], data, PARAMETER);
+            } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
+                log.error(e.getMessage());
+            }
         }
 
         //Summary of the results.
@@ -232,11 +223,13 @@ public class Simulation {
                 data.add(d);
 
                 //Logging the node history of that round
-                ArrayList<double[][]> hist = net.getHistory();
-                try {
-                    writer.writePositions(hist);
-                } catch (IOException e) {
-                    log.error("Failed to log the node position history: " + e.getMessage());
+                if(positionCollection != null) {
+                    ArrayList<double[][]> hist = net.getHistory();
+                    try {
+                        positionCollection.printPositions(hist);
+                    } catch (Exception e) {
+                        log.error("Failed to log the node position history: " + e.getMessage());
+                    }
                 }
 
                 log.info("Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds!");

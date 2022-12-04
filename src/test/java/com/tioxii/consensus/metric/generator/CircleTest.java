@@ -23,10 +23,10 @@ public class CircleTest {
         try {
             nodes = generator.generate(number);
 
-            INode node = nodes[0];
+            
             System.out.println(nodes.length);
-            assertEquals(number, nodes.length);
-            assertEquals(node.getClass(), type);
+            
+            
 
             Arrays.stream(nodes).forEach(x -> {
                 System.out.println(Arrays.toString(x.getOpinion()));
@@ -34,5 +34,17 @@ public class CircleTest {
         } catch (NodeGenerationException e) {
             e.printStackTrace();
         }
+        int l = -1; 
+        Class<? extends INode> clazz = null;
+
+        if(nodes != null) {
+            l = nodes.length;
+            if(l > 0)
+                clazz = nodes[0].getClass();
+        }
+            
+        
+        assertEquals(number, l);
+        assertEquals(clazz, type);
     }
 }

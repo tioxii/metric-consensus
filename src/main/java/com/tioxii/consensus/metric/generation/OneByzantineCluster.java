@@ -6,13 +6,13 @@ import java.util.Collections;
 
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.INodeGenerator;
-import com.tioxii.consensus.metric.api.Parameter;
 import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.util.Parameter;
 
 public class OneByzantineCluster implements INodeGenerator {
-
-    @Parameter(shouldPrint = true)
-    double fraction_byzantine = 0.0f;
+    
+    @Parameter(isParameter = true, name = "Byzantine")
+    public double fraction_byzantine = 0.0f;
     double[] honestClusterPosition = null;
     double[] byzantineClusterPosition = null;
     Class<? extends INode> type; 

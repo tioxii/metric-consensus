@@ -8,6 +8,8 @@ import com.tioxii.consensus.metric.api.ITerminate;
 
 public class NumberOfClusterTermination implements ITerminate {
 
+    public int clusters = 2;
+
     @Override
     public boolean shouldTerminate(INode[] nodes) {
         ArrayList<double[]> set = new ArrayList<double[]>();
@@ -23,7 +25,7 @@ public class NumberOfClusterTermination implements ITerminate {
             if(!hasElement) {
                 set.add(nodes[i].getOpinion());
             }
-            if(set.size() > 2)
+            if(set.size() > clusters)
                 return false;
 
             hasElement = false;
