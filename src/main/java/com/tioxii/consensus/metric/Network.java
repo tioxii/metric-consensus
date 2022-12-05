@@ -27,7 +27,7 @@ public class Network implements Runnable, IThreadQueueElement {
     private int rounds = 0;
     public double[] startMean = null;
     public double[] endMean = null;
-    public boolean LOG_NODEHISTROY = true;
+    public boolean LOG_NODEHISTROY = false;
     private ArrayList<double[][]> nodesHistroy = new ArrayList<double[][]>();
 
     /**
