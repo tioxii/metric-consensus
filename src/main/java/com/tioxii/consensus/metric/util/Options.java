@@ -29,6 +29,9 @@ public class Options {
     public double beta;
     public int h;
 
+    //Generation specific parameters
+    public int clusters;
+
     //Collection of results
     public boolean record_positions;
     public boolean record_results;
@@ -69,6 +72,7 @@ public class Options {
             this.epsilon = Double.parseDouble(consensusProps.getProperty("epsilon").replaceAll(" ", ""));
             this.file_name = (String) consensusProps.getOrDefault("filename", "none");
             this.max_thread_count = Integer.parseInt(((String) consensusProps.getOrDefault("max_thread_count", "1")).replaceAll(" ", ""));
+            this.clusters = Integer.parseInt(consensusProps.getProperty("clusters"));
         }
     }
 }

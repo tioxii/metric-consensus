@@ -108,12 +108,19 @@ public class Network implements Runnable, IThreadQueueElement {
         //update nodes one at a time
         int i = 0;
         boolean converged = false;
+        boolean shouldRunTerminate = true;
 
         do {
+            INode newNode;
             if(nodes[i].ishonest()) {
-                nodes[i] = dynamic.applyDynamicOn(i, nodes);
+                newNode = dynamic.applyDynamicOn(i, nodes);
+            } else {
+                newNode = nodes[i];
             }
             
+            shouldRunTerminate = !nodes[i].equals(newNode);
+
+            nodes[i] = newNode;
             i = (i + 1) % nodes.length;
 
             if(LOG_NODEHISTROY && i == 0) {
@@ -122,8 +129,9 @@ public class Network implements Runnable, IThreadQueueElement {
 
             rounds++;
             
-            //check if converged
-            converged = terminate.shouldTerminate(nodes);
+            if(shouldRunTerminate) {
+                converged = terminate.shouldTerminate(nodes);
+            }
         } while (!converged);
 
         if(LOG_NODEHISTROY) {
