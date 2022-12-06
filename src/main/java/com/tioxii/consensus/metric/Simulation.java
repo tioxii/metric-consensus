@@ -167,7 +167,7 @@ public class Simulation {
 
         //Creating Network simulations and add them to the q.
         for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR);
+            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR.copyThis());
             net.t = new Thread(net);
             net.t.setName(i + "");
 

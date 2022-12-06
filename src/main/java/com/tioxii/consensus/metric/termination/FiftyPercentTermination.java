@@ -26,5 +26,23 @@ public class FiftyPercentTermination implements ITerminate {
             }
         }
         return false;
+    }
+
+    @Override
+    public void synchronous(INode[] nodes, int index) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void asynchronous(INode[] nodes, int index) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public ITerminate copyThis() {
+        // TODO Auto-generated method stub
+        return null;
     }   
 }

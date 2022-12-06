@@ -78,6 +78,7 @@ public class Network implements Runnable, IThreadQueueElement {
                 } else {
                     newNodes[i] = nodes[i];
                 }
+                terminate.synchronous(newNodes, i);
             }
             
             if(LOG_NODEHISTROY) {
@@ -108,7 +109,6 @@ public class Network implements Runnable, IThreadQueueElement {
         //update nodes one at a time
         int i = 0;
         boolean converged = false;
-        boolean shouldRunTerminate = true;
 
         do {
             INode newNode;
@@ -117,8 +117,6 @@ public class Network implements Runnable, IThreadQueueElement {
             } else {
                 newNode = nodes[i];
             }
-            
-            shouldRunTerminate = !nodes[i].equals(newNode);
 
             nodes[i] = newNode;
             i = (i + 1) % nodes.length;
@@ -129,9 +127,8 @@ public class Network implements Runnable, IThreadQueueElement {
 
             rounds++;
             
-            if(shouldRunTerminate) {
-                converged = terminate.shouldTerminate(nodes);
-            }
+            terminate.asynchronous(nodes, i);
+            converged = terminate.shouldTerminate(nodes);
         } while (!converged);
 
         if(LOG_NODEHISTROY) {
