@@ -5,7 +5,6 @@ import java.util.Arrays;
 import com.tioxii.consensus.metric.api.INode;
 import com.tioxii.consensus.metric.api.ITerminate;
 import com.tioxii.math.Distance;
-import com.tioxii.math.exceptions.DifferentDimensionsException;
 import com.tioxii.util.Parameter;
 
 public class EpsilonTermination implements ITerminate {
@@ -33,7 +32,11 @@ public class EpsilonTermination implements ITerminate {
     }
 
     private double[] calculateWeight(INode node, int length) {
-        return null;
+        double[] weight = new double[node.getOpinion().length];
+        for(int i = 0; i < weight.length; i++) {
+            weight[i] = node.getOpinion()[i] / (double) length;
+        }
+        return weight;
     }
 
     int counter = 0;
@@ -60,8 +63,7 @@ public class EpsilonTermination implements ITerminate {
 
     @Override
     public ITerminate copyThis() {
-        // TODO Auto-generated method stub
-        return null;
+        return new EpsilonTermination(this.epsilon);
     }
     
 }
