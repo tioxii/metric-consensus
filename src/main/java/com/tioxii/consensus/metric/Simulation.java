@@ -47,6 +47,15 @@ public class Simulation {
     private SampleData dataCollection = null;
     private SampleData positionCollection = null;
 
+    /**
+     * For data collection.
+     */
+    public class Data {
+        public int consensusTime;
+        public double[] startMean;
+        public double[] endMean;
+    }
+
     public Simulation(int dimensions, 
                       int sim_rounds, 
                       int[] participating_nodes,
@@ -83,18 +92,10 @@ public class Simulation {
         }
     }
 
-    public class Data {
-        public int consensusTime;
-        public double[] startMean;
-        public double[] endMean;
-    }
-
     /**
-     * Start the simulation.
+     * Create unique filenames for CSV files.
      */
-    public void startSimulate() {
-        QUEUE = new ThreadQueue<>(MAX_THREAD_COUNT);
-        
+    private void createFileName() {
         log.info("Setting up file for collecting results.");
         log.info("Log positions: " + RECORD_POSITIONS);
         log.info("Log round results: " + RECORD_RESULTS);
@@ -109,34 +110,96 @@ public class Simulation {
         FILE_NAME += "_R-" + SIM_ROUNDS + "_SYNC-" + SYNCHRONOUS;
         FILE_NAME_POSITIONS = FILE_NAME + "_POSITIONS" + ".csv";
         FILE_NAME += ".csv";
+    }
 
+    /**
+     * Create CSV files and corresponding directory.
+     */
+    private void createFiles() {
+        //Create directory if it doesn't exist.
+        File dir = new File(DIR);
+        if(!dir.exists()) {
+            dir.mkdir();
+        }
+        if(RECORD_RESULTS)
+            dataCollection = new SampleData(new File(DIR + FILE_NAME), PARAMETER_NAMES);
+        if(RECORD_POSITIONS)
+            positionCollection = new SampleData(new File(DIR + FILE_NAME_POSITIONS), null);
+    }
+
+    /**
+     * Close all CSV files.
+     * @throws IOException
+     */
+    private void closeFiles() throws IOException {
+        if(dataCollection != null) 
+            this.dataCollection.close();
+        if(positionCollection != null) 
+            this.positionCollection.close();
+    }
+
+    /**
+     * Iterate over the simulation.
+     */
+    private void iterateOverSimulations() {
+        for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
+            try {
+                simulate(i);
+            } catch (NetworkGenerationException | NodeGenerationException e) {
+                log.error("Failed to simulate round: " + i);
+            }
+        }
+    }
+
+    /**
+     * Start the simulation.
+     */
+    public void startSimulate() {
+        QUEUE = new ThreadQueue<>(MAX_THREAD_COUNT);
+        createFileName();
         try {
-            //Create directory if it doesn't exist.
-            File dir = new File(DIR);
-            if(!dir.exists()) {
-                dir.mkdir();
-            }
-            
-            if(RECORD_RESULTS)
-                dataCollection = new SampleData(new File(DIR + FILE_NAME), PARAMETER_NAMES);
-
-            if(RECORD_POSITIONS)
-                positionCollection = new SampleData(new File(DIR + FILE_NAME_POSITIONS), null);
-            
-            for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
-                try {
-                    simulate(i);
-                } catch (NetworkGenerationException | NodeGenerationException e) {
-                    log.error("Failed to simulate round: " + i);
-                }
-            }
-                
-            if(dataCollection != null) 
-                this.dataCollection.close();
-            if(positionCollection != null) 
-                this.positionCollection.close();
+            createFiles();
+            iterateOverSimulations();
+            closeFiles();
         } catch (IOException | IllegalArgumentException | SecurityException e) {
             log.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Create networks and start the metric consensus process.
+     * @param iteration
+     * @throws NodeGenerationException
+     */
+    private void createNetworks(int iteration) throws NodeGenerationException {
+        //Creating Network simulations and add them to the q.
+        for(int i = 0; i < SIM_ROUNDS; i++) {
+            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR.copyThis(), false);
+            net.setThread(new Thread(net));
+            net.getThread().setName(i + "");
+
+            try {
+                QUEUE.add(net);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.debug("Round " + i + "started!");
+        }
+    }
+
+    /**
+     * Collect data from the metric consensus process.
+     * @param data
+     * @param iteration
+     */
+    private void collectData(ArrayList<Data> data, int iteration) {
+        //Printing Results to CSV file.
+        if(dataCollection != null) {
+            try {
+                dataCollection.print(PARTICIPATING_NODES[iteration], data, PARAMETER);
+            } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 
@@ -146,7 +209,7 @@ public class Simulation {
      * @throws NetworkGenerationException
      * @throws NodeGenerationException
      */
-    public void simulate(int iteration) throws NetworkGenerationException, NodeGenerationException {
+    private void simulate(int iteration) throws NetworkGenerationException, NodeGenerationException {
         ArrayList<Data> data = new ArrayList<>();
 
         log.info("-------Starting Simulation-------");
@@ -165,19 +228,7 @@ public class Simulation {
         evaluation.setName("Evaluation");
         evaluation.start();
 
-        //Creating Network simulations and add them to the q.
-        for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR.copyThis());
-            net.t = new Thread(net);
-            net.t.setName(i + "");
-
-            try {
-                QUEUE.add(net);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            log.debug("Round " + i + "started!");
-        }
+        createNetworks(iteration);
 
         //Waiting for the evaluation to be done.
         try {
@@ -187,19 +238,11 @@ public class Simulation {
             log.error(e.getMessage());
         }
 
-        //Printing Results to CSV file.
-        if(dataCollection != null) {
-            try {
-                dataCollection.print(PARTICIPATING_NODES[iteration], data, PARAMETER);
-            } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
-                log.error(e.getMessage());
-            }
-        }
+        collectData(data, iteration);
 
         //Summary of the results.
         int[] rounds = data.stream().map(elem -> elem.consensusTime).mapToInt(Integer::intValue).toArray();
         double average = Arrays.stream(rounds).average().getAsDouble();
-        
         long endTime = System.nanoTime();
         double totalTime = (double) (endTime - startTime) / 1000000000;
 
@@ -208,7 +251,26 @@ public class Simulation {
         log.info("Time: " + totalTime + "s");
     }
 
-    public void evaluate(ArrayList<Data> data) {
+    /**
+     * Collect positions from the metric consensus process.
+     * @param net
+     */
+    private void handlePositions(Network net) {
+        if(positionCollection != null) {
+            ArrayList<double[][]> hist = net.getHistory();
+            try {
+                positionCollection.printPositions(hist);
+            } catch (Exception e) {
+                log.error("Failed to log the node position history: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Wait for metric-consensus process threads and colltect the data.
+     * @param data
+     */
+    private void evaluate(ArrayList<Data> data) {
         Network net = null;
 
         for (int i = 0; i < SIM_ROUNDS; i++) {
@@ -223,16 +285,9 @@ public class Simulation {
                 data.add(d);
 
                 //Logging the node history of that round
-                if(positionCollection != null) {
-                    ArrayList<double[][]> hist = net.getHistory();
-                    try {
-                        positionCollection.printPositions(hist);
-                    } catch (Exception e) {
-                        log.error("Failed to log the node position history: " + e.getMessage());
-                    }
-                }
+                handlePositions(net);
 
-                log.info("Round " + net.t.getName() + " complete with " + net.getRounds() + " rounds!");
+                log.info("Round " + net.getThread().getName() + " complete with " + net.getRounds() + " rounds!");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }       

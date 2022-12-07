@@ -40,7 +40,7 @@ public class NumberOfClusterTermination implements ITerminate {
     }
 
     @Override
-    public void asynchronous(INode[] nodes, int index) {
+    public void asynchronous(INode[] nodes, int index, INode oldNode) {
         // TODO Auto-generated method stub
         
     }

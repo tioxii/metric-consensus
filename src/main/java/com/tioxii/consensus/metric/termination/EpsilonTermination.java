@@ -43,9 +43,19 @@ public class EpsilonTermination implements ITerminate {
     }
 
     @Override
-    public void asynchronous(INode[] nodes, int index) {
+    public void asynchronous(INode[] nodes, int index, INode oldNode) {
         // TODO Auto-generated method stub
         
+        /*
+         * if(mean == null) {
+            double[][] opinions = Arrays.stream(nodes)
+                .map(node -> node.getOpinion()).toArray(double[][]::new);
+            mean = Distance.calculateMean(opinions);
+        }
+        if(oldNodes == null) {
+            
+        }
+         */
     }
 
     @Override

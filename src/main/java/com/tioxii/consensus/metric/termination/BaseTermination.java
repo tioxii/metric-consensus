@@ -15,25 +15,23 @@ public class BaseTermination implements ITerminate {
     public void synchronous(INode[] nodes, int index) {
         if(index == 0) {
             terminate = true;
-        } else {
-            terminate = nodes[index].equals(nodes[index-1]) && terminate;
+            return;
         }
+        terminate = nodes[index].equals(nodes[index-1]) && terminate;
     }
 
     private int counter = 0;
 
-    public void asynchronous(INode[] nodes, int index) {
+    public void asynchronous(INode[] nodes, int index, INode oldNode) {
         int indexSecond = index - 1;
         if(indexSecond == -1) {
             indexSecond += nodes.length;
         }
-
-        if(nodes[index].equals(nodes[indexSecond])) {
-            counter++;
-        } else {
+        if(!nodes[index].equals(nodes[indexSecond])) {
             counter = 0;
+            return;
         }
-
+        counter++;
         if(counter == nodes.length) {
             terminate = true;
         }

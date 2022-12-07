@@ -19,15 +19,24 @@ public class SampleData {
             file.createNewFile();
             FileWriter out = new FileWriter(file, true);
             printer = new CSVPrinter(out, CSVFormat.DEFAULT);
-
-            if(headers != null && !file.exists()) {
-                for(int i = 0; i < headers.length; i++) {
-                    printer.print(headers[i]);
-                }
-            }
-            printer.println();
+            printHeaders(file, headers);
         } catch(IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Print headers for the CSV file.
+     * @param file
+     * @param headers
+     * @throws IOException
+     */
+    private void printHeaders(File file, String[] headers) throws IOException {
+        if((headers != null) && !file.exists()) {
+            for(int i = 0; i < headers.length; i++) {
+                printer.print(headers[i]);
+            }
+            printer.println();
         }
     }
 
