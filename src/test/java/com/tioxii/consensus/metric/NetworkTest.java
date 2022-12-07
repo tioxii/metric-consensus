@@ -29,8 +29,6 @@ public class NetworkTest {
             opinionNotEqual[3] += (double) i;
             nodesNotEqual[i] = new BaseNode(Arrays.copyOf(opinionNotEqual, 1000));
         }
-
-        
     }
     
     @Test
@@ -41,10 +39,6 @@ public class NetworkTest {
         for(int i = 0; i < nodesNotEqual.length; i++) {
             opinionNotEqual[3] += (double) i;
             nodesNotEqual[i] = new BaseNode(opinionNotEqual);
-        }
-
-        for(int i = 0; i < 1000; i ++) {
-        
         }
     }
 }

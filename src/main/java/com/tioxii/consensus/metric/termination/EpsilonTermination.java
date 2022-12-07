@@ -19,43 +19,43 @@ public class EpsilonTermination implements ITerminate {
     
     @Override
     public boolean shouldTerminate(INode[] nodes) {
-        double[][] opinions = Arrays.stream(nodes)
-            .map(node -> node.getOpinion())
-            .toArray(double[][]::new);
-
-        double[] mean = Distance.calculateMean(opinions);
-        
-        for (int i = 1; i < nodes.length; i++) {
-            try {
-                if(Distance.getDistanceEuclidean(mean, nodes[i].getOpinion()) > epsilon)
-                return false;
-            } catch (DifferentDimensionsException e) {
-                return true;
-            }
+        if(counter == nodes.length) {
+            return true;
         }
-        return true;
+        return false;
     }
+
+    double[] mean = null;
 
     @Override
     public void synchronous(INode[] nodes, int index) {
         // TODO Auto-generated method stub
-        
     }
+
+    private double[] calculateWeight(INode node, int length) {
+        return null;
+    }
+
+    int counter = 0;
 
     @Override
     public void asynchronous(INode[] nodes, int index, INode oldNode) {
-        // TODO Auto-generated method stub
-        
-        /*
-         * if(mean == null) {
+        if(mean == null) {
             double[][] opinions = Arrays.stream(nodes)
                 .map(node -> node.getOpinion()).toArray(double[][]::new);
             mean = Distance.calculateMean(opinions);
         }
-        if(oldNodes == null) {
-            
+        double[] oldWeight = calculateWeight(oldNode, nodes.length);
+        double[] newWeight = calculateWeight(nodes[index], nodes.length);
+        for(int i = 0; i < mean.length; i++) {
+            mean[i] -= oldWeight[i];
+            mean[i] += newWeight[i];
         }
-         */
+        if(Distance.getDistanceEuclideanWithOutCheck(mean, nodes[index].getOpinion()) < epsilon) {
+            counter++;
+        } else {
+            counter = 0;
+        }
     }
 
     @Override
