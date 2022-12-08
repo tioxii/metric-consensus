@@ -53,8 +53,16 @@ public class SampleData {
         printer.flush();
     }
 
-    public void printPositions(ArrayList<double[][]> positions) {
-
+    public void printPositions(ArrayList<double[][]> positions) throws IOException {
+        for(int i = 0; i < positions.size(); i++) {
+            for(int j = 0; j < positions.get(i).length; j++) {
+                printer.print(i);
+                for(int k = 0; k < positions.get(i)[j].length; k++) {
+                    printer.print(positions.get(i)[j][k]);
+                }
+                printer.println();
+            }
+        }
     }
 
     public void close() throws IOException {

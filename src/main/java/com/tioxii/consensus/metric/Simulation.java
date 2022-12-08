@@ -174,7 +174,13 @@ public class Simulation {
     private void createNetworks(int iteration) throws NodeGenerationException {
         //Creating Network simulations and add them to the q.
         for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(DYNAMIC, GENERATOR.generate(PARTICIPATING_NODES[iteration]), SYNCHRONOUS, TERMINATOR.copyThis(), false);
+            Network net = new Network(
+                DYNAMIC, 
+                GENERATOR.generate(PARTICIPATING_NODES[iteration]), 
+                SYNCHRONOUS, 
+                TERMINATOR.copyThis(), 
+                RECORD_POSITIONS
+            );
             net.setThread(new Thread(net));
             net.getThread().setName(i + "");
 
