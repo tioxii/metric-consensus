@@ -3,18 +3,17 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.tioxii.consensus.metric.api.INode;
-import com.tioxii.consensus.metric.nodes.BaseNode;
+import com.tioxii.simulation.consensus.metric.Node;
 
 public class NetworkTest {
     
     @Test
     public void testConsensusReached() {
-        INode[] nodesEqual = new INode[1000];
+        Node[] nodesEqual = new Node[1000];
         double[] opinionEqual = {0.5, 0.5, 0.5, 0.5};
 
         for(int i = 0; i < nodesEqual.length; i++) {
-            nodesEqual[i] = new BaseNode(opinionEqual);
+            nodesEqual[i] = new Node(opinionEqual);
         }
 
         
@@ -22,23 +21,23 @@ public class NetworkTest {
 
     @Test
     public void testConsensusNotReached() {
-        INode[] nodesNotEqual = new INode[1000];
+        Node[] nodesNotEqual = new Node[1000];
         double[] opinionNotEqual = {0.5, 0.5, 0.5, 0.5};
 
         for(int i = 0; i < nodesNotEqual.length; i++) {
             opinionNotEqual[3] += (double) i;
-            nodesNotEqual[i] = new BaseNode(Arrays.copyOf(opinionNotEqual, 1000));
+            nodesNotEqual[i] = new Node(Arrays.copyOf(opinionNotEqual, 1000));
         }
     }
     
     @Test
     public void testNetworkNodes() {
-        INode[] nodesNotEqual = new INode[1000];
+        Node[] nodesNotEqual = new Node[1000];
         double[] opinionNotEqual = {0.5, 0.5, 0.5, 0.5};
 
         for(int i = 0; i < nodesNotEqual.length; i++) {
             opinionNotEqual[3] += (double) i;
-            nodesNotEqual[i] = new BaseNode(opinionNotEqual);
+            nodesNotEqual[i] = new Node(opinionNotEqual);
         }
     }
 }

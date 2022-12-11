@@ -6,19 +6,18 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.tioxii.consensus.metric.api.INode;
-import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.consensus.metric.generation.Circle;
-import com.tioxii.consensus.metric.nodes.BaseNode;
+import com.tioxii.simulation.consensus.metric.Node;
+import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.generators.Circle;
 
 public class CircleTest {
     
     @Test
     public void testgenerateNodes() {
         int number = 1000;
-        Class<? extends INode> type = BaseNode.class;
+        Class<? extends Node> type = Node.class;
         Circle generator = new Circle(11, type);
-        INode[] nodes = null;
+        Node[] nodes = null;
 
         try {
             nodes = generator.generate(number);
@@ -35,7 +34,7 @@ public class CircleTest {
             e.printStackTrace();
         }
         int l = -1; 
-        Class<? extends INode> clazz = null;
+        Class<? extends Node> clazz = null;
 
         if(nodes != null) {
             l = nodes.length;

@@ -8,16 +8,16 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.tioxii.consensus.metric.Network;
-import com.tioxii.consensus.metric.api.INode;
-import com.tioxii.consensus.metric.dynamics.BaseDynamic;
-import com.tioxii.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.consensus.metric.generation.RandomNodes;
-import com.tioxii.consensus.metric.nodes.BaseNode;
+import com.tioxii.simulation.consensus.metric.Network;
+import com.tioxii.simulation.consensus.metric.Node;
+import com.tioxii.simulation.consensus.metric.dynamics.BaseDynamic;
+import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
+import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
 
 public class BaseTerminationTest {
     
-    private boolean areNodesEqual(INode[] nodes) {
+    private boolean areNodesEqual(Node[] nodes) {
         for(int i = 1; i < nodes.length; i++) {
             if(!nodes[0].equals(nodes[i])) {
                 return false;
@@ -26,7 +26,7 @@ public class BaseTerminationTest {
         return true;
     }
 
-    public void printNodes(INode[] nodes) {
+    public void printNodes(Node[] nodes) {
         Arrays.stream(nodes).forEach(node -> {
             System.out.println(Arrays.toString(node.getOpinion()));
         });
@@ -54,7 +54,7 @@ public class BaseTerminationTest {
         int TEST_ROUNDS = 1000;
         Network network = null;
         BaseTermination termination = new BaseTermination();
-        RandomNodes random = new RandomNodes(2, BaseNode.class);
+        RandomNodes random = new RandomNodes(2, Node.class);
         BaseDynamic dynamic = new BaseDynamic();
 
         try {
@@ -64,7 +64,7 @@ public class BaseTerminationTest {
                 network.getThread().start();
 
                 network.getThread().join();
-                INode[] nodes = network.getNodes();
+                Node[] nodes = network.getNodes();
                 int rounds = network.getRounds();
                 ArrayList<double[][]> history = network.getHistory();
                 history.remove(history.size() - 1);
@@ -85,7 +85,7 @@ public class BaseTerminationTest {
         int TEST_ROUNDS = 1000;
         Network network = null;
         BaseTermination termination = new BaseTermination();
-        RandomNodes random = new RandomNodes(2, BaseNode.class);
+        RandomNodes random = new RandomNodes(2, Node.class);
         BaseDynamic dynamic = new BaseDynamic();
 
         try {
@@ -95,7 +95,7 @@ public class BaseTerminationTest {
                 network.getThread().start();
 
                 network.getThread().join();
-                INode[] nodes = network.getNodes();
+                Node[] nodes = network.getNodes();
                 int rounds = network.getRounds();
                 ArrayList<double[][]> history = network.getHistory();
                 history.remove(history.size() - 1);
