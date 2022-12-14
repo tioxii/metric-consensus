@@ -15,9 +15,14 @@ There are 4 dynamics implemented in this project:
 - MeanValueDynamic
 
 ## Termination
-There are three termination criterias implemented in this project
+There are three termination criterias implemented in this project:
 - BaseTermination
 - EpsilonTermination
 - FiftyPercentTermination
 
 ## Starting Positions
+There are a bunch of starting positions implemented in this project:
+- RandomNodes
+- Circle
+- Opposing
+- Byzantine
