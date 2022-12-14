@@ -7,7 +7,7 @@ The goal now is to reach a consensus in a decentralized manner, so that all hone
 The process itself is simulated in rounds which can either be synchronous or asynchronous.
 In each round all nodes apply the same procedure, which is referred to as dynamic.
 
-## Dynamic
+## Dynamics
 There are 4 dynamics implemented in this project:
 - BaseDynamic
 - OnMajorityDynamic
