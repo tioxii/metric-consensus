@@ -37,6 +37,7 @@ public class SimulationManager {
     public String FILE_NAME = null;
     private String FILE_NAME_POSITIONS = null;
     public String DIR = "results/";
+    public String DIR_POSITIONS = "results/positions";
     public boolean RECORD_RESULTS = false;
     public boolean RECORD_POSITIONS = false;
     
@@ -120,6 +121,10 @@ public class SimulationManager {
         File dir = new File(DIR);
         if(!dir.exists()) {
             dir.mkdir();
+        }
+        File dirPos = new File(DIR);
+        if(!dirPos.exists()) {
+            dirPos.mkdirs();
         }
         if(RECORD_RESULTS)
             dataCollection = new SampleData(new File(DIR + FILE_NAME), PARAMETER_NAMES);

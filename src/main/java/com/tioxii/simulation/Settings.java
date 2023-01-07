@@ -10,7 +10,6 @@ public class Settings {
     //Parameters
     public int sim_rounds;
     public int dimensions;
-    public float fraction_dishonest;
     public String dynamic;
     public String nodetype;
     public boolean synchronous;
@@ -29,6 +28,8 @@ public class Settings {
 
     //Generation specific parameters
     public int clusters;
+    public double oneLargeClusterSize;
+    public float fraction_dishonest;
 
     //Collection of results
     public boolean record_positions;
@@ -71,6 +72,7 @@ public class Settings {
             this.file_name = (String) consensusProps.getOrDefault("filename", "none");
             this.max_thread_count = Integer.parseInt(((String) consensusProps.getOrDefault("max_thread_count", "1")).replaceAll(" ", ""));
             this.clusters = Integer.parseInt(consensusProps.getProperty("clusters"));
+            this.oneLargeClusterSize = Double.parseDouble(consensusProps.getProperty("oneLargeClusterSize"));
         }
     }
 }

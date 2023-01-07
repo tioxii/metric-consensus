@@ -1,6 +1,7 @@
 package com.tioxii.simulation.consensus.metric.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import com.tioxii.simulation.consensus.metric.Node;
@@ -16,7 +17,7 @@ public class DynamicUtil {
         Node ret = null;
         
         try {
-            ret = node.getClass().getConstructor(double[].class).newInstance(opinion);
+            ret = node.getClass().getConstructor(double[].class).newInstance(Arrays.copyOf(opinion, opinion.length));
         } catch (Exception e) {
            e.printStackTrace();
         }
@@ -40,5 +41,17 @@ public class DynamicUtil {
         }
 
         return opinions;
+    }
+
+    public static Random r = new Random();
+
+    /**
+     * Fills the given array with random doubles between 0 (inclusive) and 1 (exclusive)
+     * @param array to be filled.
+     */
+    public static void fillArrayWithRandomNumbers(double[] array, double offset) {
+        for(int i = 0; i < array.length; i++) {
+            array[i] = r.nextDouble() + offset;
+        }
     }
 }

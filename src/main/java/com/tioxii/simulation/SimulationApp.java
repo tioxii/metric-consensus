@@ -21,7 +21,9 @@ import com.tioxii.simulation.consensus.metric.dynamics.OneMajorityDynamic;
 import com.tioxii.simulation.consensus.metric.generators.Circle;
 import com.tioxii.simulation.consensus.metric.generators.ClustersAtPositions;
 import com.tioxii.simulation.consensus.metric.generators.OneByzantineCluster;
+import com.tioxii.simulation.consensus.metric.generators.OneLargeCluster;
 import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
+import com.tioxii.simulation.consensus.metric.generators.TwoRandomFarAway;
 import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
 import com.tioxii.simulation.consensus.metric.terminators.EpsilonTermination;
 import com.tioxii.simulation.consensus.metric.terminators.FiftyPercentTermination;
@@ -119,6 +121,8 @@ public class SimulationApp {
             case "opposing": return new ClustersAtPositions(opposing, clazz);
             case "circle": return new Circle(options.clusters, clazz);
             case "byzantine": return new OneByzantineCluster(options.fraction_dishonest, opposing[0], opposing[1], clazz);
+            case "onelarge": return new OneLargeCluster(options.oneLargeClusterSize);
+            case "faraway": return new TwoRandomFarAway();
             default: return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
         }
     }

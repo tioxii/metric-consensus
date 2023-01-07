@@ -9,7 +9,7 @@ public class Node {
     private boolean isHonest = true;
 
     public Node(double[] newOpinion) {
-        this.opinion = newOpinion;
+        this.opinion = Arrays.copyOf(newOpinion, newOpinion.length);
     }
 
     /**

@@ -12,7 +12,7 @@ import com.tioxii.util.Parameter;
 
 public class Circle implements INodeGenerator {
     
-    @Parameter(isParameter = true, name = "Cluster")
+    @Parameter(isParameter = false, name = "Cluster")
     public int numberOfClusters;
     
     private Class<? extends Node> type;
