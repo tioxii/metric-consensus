@@ -23,6 +23,20 @@ public class Iterations {
         return ret;
     }
 
+    public static int[] iterationsExpLin(int start, int end, int steps) {
+        if(start > end) {
+            return new int[0];
+        }
+
+        int[] numberOfParticipants = new int[(end - start) * 9];
+        for(int i = 0; i < numberOfParticipants.length; i += steps) {
+            for(int j = 0; j < 9; j++) {
+                numberOfParticipants[i * 9 + j] = (int) Math.pow(10, i + start) * j;
+            }
+        }
+        return numberOfParticipants;
+    }
+
     /**
      * Generate an Array that contains the number of participating nodes. Increments are linear.
      * @param start inclusive

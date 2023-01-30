@@ -16,6 +16,7 @@ import com.tioxii.simulation.consensus.metric.api.INodeGenerator;
 import com.tioxii.simulation.consensus.metric.api.ITerminate;
 import com.tioxii.simulation.consensus.metric.dynamics.BaseDynamic;
 import com.tioxii.simulation.consensus.metric.dynamics.BaseDynamicRandom;
+import com.tioxii.simulation.consensus.metric.dynamics.ClosestToMeanDynamic;
 import com.tioxii.simulation.consensus.metric.dynamics.MeanValueDynamic;
 import com.tioxii.simulation.consensus.metric.dynamics.OneMajorityDynamic;
 import com.tioxii.simulation.consensus.metric.generators.Circle;
@@ -76,6 +77,7 @@ public class SimulationApp {
             case "base-random": return new BaseDynamicRandom(option.beta);
             case "one-majority": return new OneMajorityDynamic();
             case "mean-value": return new MeanValueDynamic(option.h);
+            case "closest-to-mean": return new ClosestToMeanDynamic();
             default: return new BaseDynamic();
         }
     }
