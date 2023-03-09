@@ -1,6 +1,7 @@
 package com.tioxii.simulation.consensus.metric;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +48,8 @@ public class SimulationManager {
     private ThreadQueue<Network> QUEUE = null;
     private SampleData dataCollection = null;
     private SampleData positionCollection = null;
+
+    private double time = 0.0;
 
     /**
      * For data collection.
@@ -143,6 +146,19 @@ public class SimulationManager {
             this.positionCollection.close();
     }
 
+    private void writeIterations() throws IOException {
+        if(this.time < 10.0) {
+            return;
+        }
+        
+        File file = new File("iterations.txt");
+        FileWriter out = new FileWriter(file);
+        for(int i = 0; i < PARTICIPATING_NODES.length; i++) {
+            out.write(PARTICIPATING_NODES[i] + "\n");
+        }
+        out.close();
+    }
+
     /**
      * Iterate over the simulation.
      */
@@ -150,7 +166,8 @@ public class SimulationManager {
         for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
             try {
                 simulate(i);
-            } catch (NetworkGenerationException | NodeGenerationException e) {
+                writeIterations();
+            } catch (NetworkGenerationException | NodeGenerationException | IOException e) {
                 e.printStackTrace();
                 log.error("Failed to simulate round: " + i);
             }
@@ -257,6 +274,10 @@ public class SimulationManager {
         double average = Arrays.stream(rounds).average().getAsDouble();
         long endTime = System.nanoTime();
         double totalTime = (double) (endTime - startTime) / 1000000000;
+        
+        if(this.time < 10.00) {
+            this.time = totalTime;
+        }
 
         log.info("-------------RESULTS-------------");
         log.info("Average number of rounds: " + average);

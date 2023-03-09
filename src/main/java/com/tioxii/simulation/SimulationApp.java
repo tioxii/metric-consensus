@@ -1,6 +1,10 @@
 package com.tioxii.simulation;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -91,6 +95,30 @@ public class SimulationApp {
      * @return
      */
     public static int[] setUpIterations(String incrementType, int start, int end, int steps) {
+        ArrayList<Integer> iterationList = new ArrayList<Integer>(0);
+        
+        File file = new File("iterations.txt");
+        if(file.exists()) {
+            try {
+                BufferedReader in = new BufferedReader(new FileReader(file));
+                while(in.ready()) {
+                    int number = Integer.parseInt(in.readLine());
+                    iterationList.add(number);
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(iterationList.size() > 0) {
+            int[] iterations = new int[iterationList.size()];
+            for(int i = 0; i < iterations.length; i++) {
+                iterations[i] = iterationList.get(i);
+            }
+            return iterations;
+        }
+
         switch(incrementType) {
             case "exponential": return Iterations.iterationsExponential(start, end, steps);
             case "linear": return Iterations.iterationsLinear(start, end, steps);
