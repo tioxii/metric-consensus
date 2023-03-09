@@ -1,2 +1,2 @@
-*.csv
+/results/oldfiles/*.csv
 *.TXT

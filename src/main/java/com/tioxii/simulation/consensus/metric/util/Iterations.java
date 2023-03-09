@@ -29,9 +29,9 @@ public class Iterations {
         }
 
         int[] numberOfParticipants = new int[(end - start) * 9];
-        for(int i = 0; i < numberOfParticipants.length; i += steps) {
+        for(int i = 0; i < end - start; i += steps) {
             for(int j = 0; j < 9; j++) {
-                numberOfParticipants[i * 9 + j] = (int) Math.pow(10, i + start) * j;
+                numberOfParticipants[i * 9 + j] = (int) Math.pow(10, i + start) * (j + 1);
             }
         }
         return numberOfParticipants;

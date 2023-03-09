@@ -94,6 +94,7 @@ public class SimulationApp {
         switch(incrementType) {
             case "exponential": return Iterations.iterationsExponential(start, end, steps);
             case "linear": return Iterations.iterationsLinear(start, end, steps);
+            case "explin": return Iterations.iterationsExpLin(start, end, steps);
             default: return new int[0];
         }
     }
