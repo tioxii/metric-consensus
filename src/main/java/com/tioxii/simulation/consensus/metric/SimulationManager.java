@@ -146,14 +146,14 @@ public class SimulationManager {
             this.positionCollection.close();
     }
 
-    private void writeIterations() throws IOException {
+    private void writeIterations(int iteration) throws IOException {
         if(this.time < 10.0) {
             return;
         }
         
-        File file = new File("iterations.txt");
+        File file = new File("iteration.txt");
         FileWriter out = new FileWriter(file);
-        for(int i = 0; i < PARTICIPATING_NODES.length; i++) {
+        for(int i = iteration + 1; i < PARTICIPATING_NODES.length; i++) {
             out.write(PARTICIPATING_NODES[i] + "\n");
         }
         out.close();
@@ -166,7 +166,7 @@ public class SimulationManager {
         for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
             try {
                 simulate(i);
-                writeIterations();
+                writeIterations(i);
             } catch (NetworkGenerationException | NodeGenerationException | IOException e) {
                 e.printStackTrace();
                 log.error("Failed to simulate round: " + i);

@@ -11,7 +11,6 @@ public class IterationTest {
         int start = 2;
         int end = 3;
         int step = 1;
-        int[] reference = {100, 200, 300, 400, 500, 600, 700, 800, 900};
         
         int[] result = Iterations.iterationsExpLin(start, end, step);
 

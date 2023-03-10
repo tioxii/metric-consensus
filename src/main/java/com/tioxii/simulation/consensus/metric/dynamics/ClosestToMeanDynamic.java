@@ -1,7 +1,5 @@
 package com.tioxii.simulation.consensus.metric.dynamics;
 
-import org.apache.commons.math3.ml.clustering.DoublePoint;
-
 import com.tioxii.math.Distance;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IDynamic;

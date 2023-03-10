@@ -56,6 +56,7 @@ public class SimulationApp {
             e.printStackTrace();
             log.error("Failed to read options");
         }
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 
     /**
@@ -97,7 +98,7 @@ public class SimulationApp {
     public static int[] setUpIterations(String incrementType, int start, int end, int steps) {
         ArrayList<Integer> iterationList = new ArrayList<Integer>(0);
         
-        File file = new File("iterations.txt");
+        File file = new File("iteration.txt");
         if(file.exists()) {
             try {
                 BufferedReader in = new BufferedReader(new FileReader(file));

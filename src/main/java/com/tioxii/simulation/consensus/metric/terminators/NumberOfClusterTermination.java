@@ -35,20 +35,17 @@ public class NumberOfClusterTermination implements ITerminate {
 
     @Override
     public void synchronous(Node[] nodes, int index) {
-        // TODO Auto-generated method stub
-        
+        return;
     }
 
     @Override
     public void asynchronous(Node[] nodes, int index, Node oldNode) {
-        // TODO Auto-generated method stub
-        
+        return;
     }
 
     @Override
     public ITerminate copyThis() {
-        // TODO Auto-generated method stub
-        return null;
+        return new NumberOfClusterTermination();
     }
     
 }
