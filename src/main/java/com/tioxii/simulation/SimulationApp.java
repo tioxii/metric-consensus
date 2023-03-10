@@ -25,6 +25,7 @@ import com.tioxii.simulation.consensus.metric.dynamics.MeanValueDynamic;
 import com.tioxii.simulation.consensus.metric.dynamics.OneMajorityDynamic;
 import com.tioxii.simulation.consensus.metric.generators.Circle;
 import com.tioxii.simulation.consensus.metric.generators.ClustersAtPositions;
+import com.tioxii.simulation.consensus.metric.generators.FullCircle;
 import com.tioxii.simulation.consensus.metric.generators.OneByzantineCluster;
 import com.tioxii.simulation.consensus.metric.generators.OneLargeCluster;
 import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
@@ -56,7 +57,18 @@ public class SimulationApp {
             e.printStackTrace();
             log.error("Failed to read options");
         }
-        java.awt.Toolkit.getDefaultToolkit().beep();
+
+        int beeps = 3;
+        try{
+            for(int i = 0; i < beeps; i++) {
+                java.awt.Toolkit.getDefaultToolkit().beep();
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        
     }
 
     /**
@@ -152,6 +164,7 @@ public class SimulationApp {
             case "random": return new RandomNodes(options.dimensions, clazz);
             case "opposing": return new ClustersAtPositions(opposing, clazz);
             case "circle": return new Circle(options.clusters, clazz);
+            case "fullcircle": return new FullCircle();
             case "byzantine": return new OneByzantineCluster(options.fraction_dishonest, opposing[0], opposing[1], clazz);
             case "onelarge": return new OneLargeCluster(options.oneLargeClusterSize);
             case "faraway": return new TwoRandomFarAway();
