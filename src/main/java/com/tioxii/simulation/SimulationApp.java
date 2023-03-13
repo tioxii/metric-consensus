@@ -57,8 +57,11 @@ public class SimulationApp {
             e.printStackTrace();
             log.error("Failed to read options");
         }
+        
+        notifiySound(3);
+    }
 
-        int beeps = 3;
+    public static void notifiySound(int beeps) {
         try{
             for(int i = 0; i < beeps; i++) {
                 java.awt.Toolkit.getDefaultToolkit().beep();
@@ -67,8 +70,6 @@ public class SimulationApp {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
-        
     }
 
     /**
