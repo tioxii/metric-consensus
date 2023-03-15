@@ -18,48 +18,29 @@ public class EpsilonTermination implements ITerminate {
     
     @Override
     public boolean shouldTerminate(Node[] nodes) {
-        if(counter == nodes.length) {
-            return true;
+        if(counter < nodes.length)
+            return false;
+
+        counter = 0;
+        double[][] opinions = Arrays.stream(nodes)
+            .map(node -> node.getOpinion()).toArray(double[][]::new);
+        double[] mean = Distance.calculateMean(opinions);
+
+        for(int i = nodes.length - 1; i >= 0 ; i--) {
+            if(Distance.getDistanceEuclideanWithOutCheck(mean, nodes[i].getOpinion()) >= this.epsilon) {
+                return false;
+            }
         }
-        return false;
-    }
-
-    double[] mean = null;
-
-    @Override
-    public void synchronous(Node[] nodes, int index) {
-        // TODO Auto-generated method stub
-    }
-
-    private double[] calculateWeight(Node node, int length) {
-        double[] weight = new double[node.getOpinion().length];
-        for(int i = 0; i < weight.length; i++) {
-            weight[i] = node.getOpinion()[i] / (double) length;
-        }
-        return weight;
+        return true;
     }
 
     int counter = 0;
 
     @Override
-    public void asynchronous(Node[] nodes, int index, Node oldNode) {
-        if(mean == null) {
-            double[][] opinions = Arrays.stream(nodes)
-                .map(node -> node.getOpinion()).toArray(double[][]::new);
-            mean = Distance.calculateMean(opinions);
-        }
-        double[] oldWeight = calculateWeight(oldNode, nodes.length);
-        double[] newWeight = calculateWeight(nodes[index], nodes.length);
-        for(int i = 0; i < mean.length; i++) {
-            mean[i] -= oldWeight[i];
-            mean[i] += newWeight[i];
-        }
-        if(Distance.getDistanceEuclideanWithOutCheck(mean, nodes[index].getOpinion()) < epsilon) {
-            counter++;
-        } else {
-            counter = 0;
-        }
-    }
+    public void synchronous(Node[] nodes, int index) { counter++; }
+
+    @Override
+    public void asynchronous(Node[] nodes, int index, Node oldNode) { counter++; }
 
     @Override
     public ITerminate copyThis() {
