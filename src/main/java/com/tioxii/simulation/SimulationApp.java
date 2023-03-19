@@ -32,6 +32,7 @@ import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
 import com.tioxii.simulation.consensus.metric.generators.RandomSizedClustersAtRandomPositions;
 import com.tioxii.simulation.consensus.metric.generators.TwoRandomFarAway;
 import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
+import com.tioxii.simulation.consensus.metric.terminators.BaseTerminationDishonest;
 import com.tioxii.simulation.consensus.metric.terminators.EpsilonTermination;
 import com.tioxii.simulation.consensus.metric.terminators.FiftyPercentTermination;
 import com.tioxii.simulation.consensus.metric.terminators.NumberOfClusterTermination;
@@ -182,6 +183,7 @@ public class SimulationApp {
             case "base": return new BaseTermination();
             case "fifty": return new FiftyPercentTermination(byzantine_position);
             case "epsilon": return new EpsilonTermination(options.epsilon);
+            case "basedishonest": return new BaseTerminationDishonest();
             default: return new BaseTermination();
         }
     }
