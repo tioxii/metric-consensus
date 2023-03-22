@@ -29,6 +29,7 @@ import com.tioxii.simulation.consensus.metric.generators.FullCircle;
 import com.tioxii.simulation.consensus.metric.generators.OneByzantineCluster;
 import com.tioxii.simulation.consensus.metric.generators.OneLargeCluster;
 import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
+import com.tioxii.simulation.consensus.metric.generators.RandomNodesPreset100;
 import com.tioxii.simulation.consensus.metric.generators.RandomSizedClustersAtRandomPositions;
 import com.tioxii.simulation.consensus.metric.generators.TwoRandomFarAway;
 import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
@@ -55,11 +56,12 @@ public class SimulationApp {
             log.debug(options.start + " "+ options.end + " " + options.step + " " + options.increment);
             SimulationManager sim = setUpSimulation(options);
             sim.startSimulate();
-        } catch (NumberFormatException | IOException e) {
+
+            Thread.sleep(1000);
+        } catch (NumberFormatException | IOException | InterruptedException e) {
             e.printStackTrace();
             log.error("Failed to read options");
         }
-        
         notifiySound(3);
     }
 
@@ -172,6 +174,7 @@ public class SimulationApp {
             case "onelarge": return new OneLargeCluster(options.oneLargeClusterSize);
             case "faraway": return new TwoRandomFarAway();
             case "randomSizedClusters": return new RandomSizedClustersAtRandomPositions();
+            case "randomNodesPreset100": return new RandomNodesPreset100();
             default: return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
         }
     }

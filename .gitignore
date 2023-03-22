@@ -1,2 +1,4 @@
 /results/oldfiles/*.csv
 *.TXT
+/results/potential/consensusTime/*.csv
+/results/potential/positions/*.csv

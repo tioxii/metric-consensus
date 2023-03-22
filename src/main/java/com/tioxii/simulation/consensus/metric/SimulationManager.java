@@ -37,8 +37,7 @@ public class SimulationManager {
     //Evaluation-Settings
     public String FILE_NAME = null;
     private String FILE_NAME_POSITIONS = null;
-    public String DIR = "results/";
-    public String DIR_POSITIONS = "results/positions";
+    public String DIR = "results/potentialSpecific/";
     public boolean RECORD_RESULTS = false;
     public boolean RECORD_POSITIONS = false;
     
@@ -130,9 +129,9 @@ public class SimulationManager {
             dirPos.mkdirs();
         }
         if(RECORD_RESULTS)
-            dataCollection = new SampleData(new File(DIR + FILE_NAME), PARAMETER_NAMES);
+            dataCollection = new SampleData(new File(DIR + "consensusTime/" + FILE_NAME), PARAMETER_NAMES);
         if(RECORD_POSITIONS)
-            positionCollection = new SampleData(new File(DIR + FILE_NAME_POSITIONS), null);
+            positionCollection = new SampleData(new File(DIR + "positions/" + FILE_NAME_POSITIONS), null);
     }
 
     /**
@@ -316,7 +315,9 @@ public class SimulationManager {
                 data.add(d);
 
                 //Logging the node history of that round
-                handlePositions(net);
+                String zero = "0";
+                if(zero.equals(net.getThread().getName()))
+                    handlePositions(net);
 
                 log.info("Round " + net.getThread().getName() + " complete with " + net.getRounds() + " rounds!");
             } catch (InterruptedException e) {
