@@ -31,6 +31,7 @@ import com.tioxii.simulation.consensus.metric.generators.OneLargeCluster;
 import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
 import com.tioxii.simulation.consensus.metric.generators.RandomNodesPreset100;
 import com.tioxii.simulation.consensus.metric.generators.RandomSizedClustersAtRandomPositions;
+import com.tioxii.simulation.consensus.metric.generators.RandomSizedClustersPreset100;
 import com.tioxii.simulation.consensus.metric.generators.TwoRandomFarAway;
 import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
 import com.tioxii.simulation.consensus.metric.terminators.BaseTerminationDishonest;
@@ -175,6 +176,7 @@ public class SimulationApp {
             case "faraway": return new TwoRandomFarAway();
             case "randomSizedClusters": return new RandomSizedClustersAtRandomPositions();
             case "randomNodesPreset100": return new RandomNodesPreset100();
+            case "randomSizedClusterPreset100": return new RandomSizedClustersPreset100();
             default: return new RandomNodes(options.dimensions, setUpNodeType(options.nodetype));
         }
     }

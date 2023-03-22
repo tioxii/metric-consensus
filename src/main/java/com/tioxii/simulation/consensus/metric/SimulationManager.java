@@ -37,7 +37,7 @@ public class SimulationManager {
     //Evaluation-Settings
     public String FILE_NAME = null;
     private String FILE_NAME_POSITIONS = null;
-    public String DIR = "results/potentialSpecific/";
+    public String DIR = "results/";
     public boolean RECORD_RESULTS = false;
     public boolean RECORD_POSITIONS = false;
     
@@ -129,9 +129,9 @@ public class SimulationManager {
             dirPos.mkdirs();
         }
         if(RECORD_RESULTS)
-            dataCollection = new SampleData(new File(DIR + "consensusTime/" + FILE_NAME), PARAMETER_NAMES);
+            dataCollection = new SampleData(new File(DIR + FILE_NAME), PARAMETER_NAMES);
         if(RECORD_POSITIONS)
-            positionCollection = new SampleData(new File(DIR + "positions/" + FILE_NAME_POSITIONS), null);
+            positionCollection = new SampleData(new File(DIR + FILE_NAME_POSITIONS), null);
     }
 
     /**

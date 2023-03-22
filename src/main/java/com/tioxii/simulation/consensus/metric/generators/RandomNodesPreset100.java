@@ -1,9 +1,5 @@
 package com.tioxii.simulation.consensus.metric.generators;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.INodeGenerator;
 import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
