@@ -60,7 +60,7 @@ public class SimulationManager {
     /**
      * Start the simulation.
      */
-    public void startSimulation() {
+    public void startSimulations() {
         QUEUE = new ThreadQueue<>(MAX_THREAD_COUNT);
         log.info("-------Starting Simulation-------");
         log.info("Byzantine-Nodes: " + 0);

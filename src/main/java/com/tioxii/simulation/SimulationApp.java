@@ -56,7 +56,7 @@ public class SimulationApp {
             Settings options = new Settings();
             log.debug(options.start + " "+ options.end + " " + options.step + " " + options.increment);
             SimulationManager sim = setUpSimulation(options);
-            sim.startSimulate();
+            sim.startSimulations();
 
             Thread.sleep(1000);
         } catch (NumberFormatException | IOException | InterruptedException e) {
