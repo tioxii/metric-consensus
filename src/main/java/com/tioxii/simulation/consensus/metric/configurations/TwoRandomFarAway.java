@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
 
 public class TwoRandomFarAway implements IConfiguration {
@@ -22,7 +22,7 @@ public class TwoRandomFarAway implements IConfiguration {
     }
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         int firstBatchSize = number / 2;
         int secondBatchSize = number - firstBatchSize;
         ArrayList<Node> nodes = new ArrayList<>();

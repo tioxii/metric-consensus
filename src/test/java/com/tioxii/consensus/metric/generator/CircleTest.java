@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.configurations.Circle;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 
 public class CircleTest {
     
@@ -30,7 +30,7 @@ public class CircleTest {
             Arrays.stream(nodes).forEach(x -> {
                 System.out.println(Arrays.toString(x.getOpinion()));
             });
-        } catch (NodeGenerationException e) {
+        } catch (ConfigurationInitException e) {
             e.printStackTrace();
         }
         int l = -1; 

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 
 public class PointInTheMiddle implements IConfiguration {
 
@@ -14,7 +14,7 @@ public class PointInTheMiddle implements IConfiguration {
     double[] middleCluster = {0.5, 0.5};
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         ArrayList<Node> nodes = new ArrayList<Node>();
         int clusterSize = number / 2;
 

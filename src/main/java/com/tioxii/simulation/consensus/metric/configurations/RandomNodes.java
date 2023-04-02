@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
 import com.tioxii.util.Parameter;
 
@@ -20,7 +20,7 @@ public class RandomNodes implements IConfiguration {
     }
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         Node[] nodes = new Node[number];
 
         for (int i = 0; i < nodes.length; i++) {
@@ -30,7 +30,7 @@ public class RandomNodes implements IConfiguration {
                 nodes[i] = clazz.getConstructor(double[].class).newInstance(opinion);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                throw new NodeGenerationException("Failed to create new node: " + e.getMessage());
+                throw new ConfigurationInitException("Failed to create new node: " + e.getMessage());
             }
         }
         return nodes;

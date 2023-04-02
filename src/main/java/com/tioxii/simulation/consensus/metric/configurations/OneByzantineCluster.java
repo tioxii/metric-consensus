@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.util.Parameter;
 
 public class OneByzantineCluster implements IConfiguration {
@@ -25,7 +25,7 @@ public class OneByzantineCluster implements IConfiguration {
     }
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         int number_byzantine = (int) (number * fraction_byzantine);
         int number_honestNodes = number - number_byzantine;
         ArrayList<Node> nodes = new ArrayList<Node>();
@@ -38,7 +38,7 @@ public class OneByzantineCluster implements IConfiguration {
                 nodes.add(node);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                throw new NodeGenerationException(e.getMessage());
+                throw new ConfigurationInitException(e.getMessage());
             }
         }
         //Honest-nodes
@@ -48,7 +48,7 @@ public class OneByzantineCluster implements IConfiguration {
                 nodes.add(node);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                throw new NodeGenerationException(e.getMessage());
+                throw new ConfigurationInitException(e.getMessage());
             }
         }
 

@@ -2,7 +2,7 @@ package com.tioxii.simulation.consensus.metric.configurations;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 
 public class PresetNodes implements IConfiguration {
 
@@ -24,7 +24,7 @@ public class PresetNodes implements IConfiguration {
      * @param number This number has no impact.
      */
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         return generator.generate(this.number);
     }
     

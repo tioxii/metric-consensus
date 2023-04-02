@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.util.Parameter;
 
 public class Circle implements IConfiguration {
@@ -26,7 +26,7 @@ public class Circle implements IConfiguration {
      * Tries to generate equals sized clusters in a circle.
      */
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         double degree;
         ArrayList<Node> nodes = new ArrayList<>();
         double[] pos = new double[2];
@@ -47,7 +47,7 @@ public class Circle implements IConfiguration {
                     nodes.add(node);
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                    throw new NodeGenerationException(e.getMessage());
+                    throw new ConfigurationInitException(e.getMessage());
                 }
             }
             if(remainder > 0) {
@@ -57,7 +57,7 @@ public class Circle implements IConfiguration {
                     remainder--;
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                    throw new NodeGenerationException(e.getMessage());
+                    throw new ConfigurationInitException(e.getMessage());
                 }
             }
         }

@@ -12,7 +12,7 @@ import com.tioxii.simulation.consensus.metric.Simulation;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.configurations.RandomNodes;
 import com.tioxii.simulation.consensus.metric.dynamics.ClosestNodeDynamics;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.termination.ConsensusTermination;
 
 public class BaseTerminationTest {
@@ -73,7 +73,7 @@ public class BaseTerminationTest {
                 assertTrue(!isHistoryUnequal(history));
                 assertTrue(areNodesEqual(nodes));
             }
-        } catch (NodeGenerationException | InterruptedException e) {
+        } catch (ConfigurationInitException | InterruptedException e) {
             e.printStackTrace();
             network = null;
         }
@@ -104,7 +104,7 @@ public class BaseTerminationTest {
                 assertTrue(!isHistoryUnequal(history));
                 assertTrue(areNodesEqual(nodes));
             }
-        } catch (NodeGenerationException | InterruptedException e) {
+        } catch (ConfigurationInitException | InterruptedException e) {
             e.printStackTrace();
             network = null;
         }

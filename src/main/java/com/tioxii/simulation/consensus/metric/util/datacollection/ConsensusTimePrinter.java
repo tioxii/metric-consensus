@@ -12,9 +12,9 @@ public class ConsensusTimePrinter {
     CSVPrinter printer = null;
     String[] parameter = null;
 
-    public ConsensusTimePrinter(String directoryName, String[] parameter, String[] header) throws IOException {
+    public ConsensusTimePrinter(String fileName, String[] parameter, String[] header) throws IOException {
         this.parameter = parameter;
-        File file = new File(directoryName + "consensusTime.csv");
+        File file = new File(fileName);
         
         file.createNewFile();
         FileWriter out = new FileWriter(file, true);
@@ -31,13 +31,15 @@ public class ConsensusTimePrinter {
         printer.println();
     }
 
-    public void printConsensusTime(int numberOfNodes, int consensusTime) throws IOException {
-        printer.print(numberOfNodes);
-        printer.print(consensusTime);
-        for(int i = 0; i < parameter.length; i++) {
-            printer.print(parameter[i]);
+    public void printConsensusTime(int numberOfNodes, int[] consensusTimes) throws IOException {
+        for(int i = 0; i < consensusTimes.length; i++) {
+            printer.print(numberOfNodes);
+            printer.print(consensusTimes[i]);
+            for(int j = 0; j < parameter.length; i++) {
+                printer.print(parameter[j]);
+            }
+            printer.println();
         }
-        printer.println();
     }
 
     public void close() throws IOException {

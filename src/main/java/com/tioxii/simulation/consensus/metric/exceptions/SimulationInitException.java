@@ -1,11 +1,14 @@
 package com.tioxii.simulation.consensus.metric.exceptions;
 
-public class NetworkGenerationException extends Exception {
+public class SimulationInitException extends Exception {
 
     String message;
 
-    public NetworkGenerationException(String message) {
+    public SimulationInitException(String message) {
         this.message = message;
+    }
+
+    public SimulationInitException(InterruptedException e) {
     }
 
     @Override

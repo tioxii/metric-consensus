@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.configurations.OneByzantineCluster;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 
 public class OneByzantineClusterTest {
     
@@ -39,7 +39,7 @@ public class OneByzantineClusterTest {
             int byzantineNodes = countNodesOnByzantinePosition(nodes, byzantineClusterPosition);
             System.out.println(byzantineNodes);
 
-        } catch (NodeGenerationException e) {
+        } catch (ConfigurationInitException e) {
             e.printStackTrace();
         }   
         int l = -1;

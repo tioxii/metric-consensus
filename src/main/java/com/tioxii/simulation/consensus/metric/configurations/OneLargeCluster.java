@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
 import com.tioxii.util.Parameter;
 
@@ -21,7 +21,7 @@ public class OneLargeCluster implements IConfiguration {
     }
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         int clusterSize = (int) (clusterSizeAsFraction * (double) number);
         double[] position = new double[dimension];
         DynamicsUtil.fillArrayWithRandomNumbers(position, 0);

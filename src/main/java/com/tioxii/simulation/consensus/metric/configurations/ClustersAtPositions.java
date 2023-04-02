@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 
 public class ClustersAtPositions implements IConfiguration {
     
@@ -20,9 +20,9 @@ public class ClustersAtPositions implements IConfiguration {
     }
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         if(number % positions.length != 0) {
-            throw new NodeGenerationException("Failed to create new node: " + number + " is not divisible by the number of positions");
+            throw new ConfigurationInitException("Failed to create new node: " + number + " is not divisible by the number of positions");
         }
         int clusterSize = number / positions.length;
         ArrayList<Node> nodes = new ArrayList<Node>();
@@ -39,7 +39,7 @@ public class ClustersAtPositions implements IConfiguration {
         });
 
         if(!(nodes.size() == number)) {
-            throw new NodeGenerationException("Failed to create nodes.");
+            throw new ConfigurationInitException("Failed to create nodes.");
         }
 
         Collections.shuffle(nodes);

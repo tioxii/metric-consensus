@@ -6,7 +6,7 @@ import java.util.Random;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
-import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
+import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
 
 public class RandomSizedClustersAtRandomPositions implements IConfiguration {
@@ -14,7 +14,7 @@ public class RandomSizedClustersAtRandomPositions implements IConfiguration {
     private int dimension = 2;
 
     @Override
-    public Node[] generate(int number) throws NodeGenerationException {
+    public Node[] generate(int number) throws ConfigurationInitException {
         Random r = new Random();
         int numberOfClusters = r.nextInt(number + 1);
 
