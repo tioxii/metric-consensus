@@ -7,8 +7,8 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import com.tioxii.simulation.consensus.metric.Node;
+import com.tioxii.simulation.consensus.metric.configurations.Circle;
 import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.simulation.consensus.metric.generators.Circle;
 
 public class CircleTest {
     

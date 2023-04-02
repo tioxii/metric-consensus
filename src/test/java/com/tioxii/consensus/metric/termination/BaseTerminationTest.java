@@ -10,10 +10,10 @@ import org.junit.Test;
 
 import com.tioxii.simulation.consensus.metric.Network;
 import com.tioxii.simulation.consensus.metric.Node;
-import com.tioxii.simulation.consensus.metric.dynamics.BaseDynamic;
+import com.tioxii.simulation.consensus.metric.configurations.RandomNodes;
+import com.tioxii.simulation.consensus.metric.dynamics.ClosestNodeDynamics;
 import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
-import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
+import com.tioxii.simulation.consensus.metric.termination.BaseTermination;
 
 public class BaseTerminationTest {
     
@@ -55,7 +55,7 @@ public class BaseTerminationTest {
         Network network = null;
         BaseTermination termination = new BaseTermination();
         RandomNodes random = new RandomNodes(2, Node.class);
-        BaseDynamic dynamic = new BaseDynamic();
+        ClosestNodeDynamics dynamic = new ClosestNodeDynamics();
 
         try {
             for(int i = 0; i < TEST_ROUNDS; i++) {
@@ -86,7 +86,7 @@ public class BaseTerminationTest {
         Network network = null;
         BaseTermination termination = new BaseTermination();
         RandomNodes random = new RandomNodes(2, Node.class);
-        BaseDynamic dynamic = new BaseDynamic();
+        ClosestNodeDynamics dynamic = new ClosestNodeDynamics();
 
         try {
             for(int i = 0; i < TEST_ROUNDS; i++) {

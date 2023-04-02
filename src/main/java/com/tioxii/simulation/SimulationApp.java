@@ -15,29 +15,29 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.SimulationManager;
-import com.tioxii.simulation.consensus.metric.api.IDynamic;
-import com.tioxii.simulation.consensus.metric.api.INodeGenerator;
-import com.tioxii.simulation.consensus.metric.api.ITerminate;
-import com.tioxii.simulation.consensus.metric.dynamics.BaseDynamic;
-import com.tioxii.simulation.consensus.metric.dynamics.BaseDynamicRandom;
-import com.tioxii.simulation.consensus.metric.dynamics.ClosestToMeanDynamic;
-import com.tioxii.simulation.consensus.metric.dynamics.MeanValueDynamic;
-import com.tioxii.simulation.consensus.metric.dynamics.OneMajorityDynamic;
-import com.tioxii.simulation.consensus.metric.generators.Circle;
-import com.tioxii.simulation.consensus.metric.generators.ClustersAtPositions;
-import com.tioxii.simulation.consensus.metric.generators.FullCircle;
-import com.tioxii.simulation.consensus.metric.generators.OneByzantineCluster;
-import com.tioxii.simulation.consensus.metric.generators.OneLargeCluster;
-import com.tioxii.simulation.consensus.metric.generators.RandomNodes;
-import com.tioxii.simulation.consensus.metric.generators.RandomNodesPreset100;
-import com.tioxii.simulation.consensus.metric.generators.RandomSizedClustersAtRandomPositions;
-import com.tioxii.simulation.consensus.metric.generators.RandomSizedClustersPreset100;
-import com.tioxii.simulation.consensus.metric.generators.TwoRandomFarAway;
-import com.tioxii.simulation.consensus.metric.terminators.BaseTermination;
-import com.tioxii.simulation.consensus.metric.terminators.BaseTerminationDishonest;
-import com.tioxii.simulation.consensus.metric.terminators.EpsilonTermination;
-import com.tioxii.simulation.consensus.metric.terminators.FiftyPercentTermination;
-import com.tioxii.simulation.consensus.metric.terminators.NumberOfClusterTermination;
+import com.tioxii.simulation.consensus.metric.api.IDynamics;
+import com.tioxii.simulation.consensus.metric.api.IConfiguration;
+import com.tioxii.simulation.consensus.metric.api.ITermination;
+import com.tioxii.simulation.consensus.metric.configurations.Circle;
+import com.tioxii.simulation.consensus.metric.configurations.ClustersAtPositions;
+import com.tioxii.simulation.consensus.metric.configurations.FullCircle;
+import com.tioxii.simulation.consensus.metric.configurations.OneByzantineCluster;
+import com.tioxii.simulation.consensus.metric.configurations.OneLargeCluster;
+import com.tioxii.simulation.consensus.metric.configurations.RandomNodes;
+import com.tioxii.simulation.consensus.metric.configurations.RandomNodesPreset100;
+import com.tioxii.simulation.consensus.metric.configurations.RandomSizedClustersAtRandomPositions;
+import com.tioxii.simulation.consensus.metric.configurations.RandomSizedClustersPreset100;
+import com.tioxii.simulation.consensus.metric.configurations.TwoRandomFarAway;
+import com.tioxii.simulation.consensus.metric.dynamics.ClosestNodeDynamics;
+import com.tioxii.simulation.consensus.metric.dynamics.BetaClosestNodeDynamics;
+import com.tioxii.simulation.consensus.metric.dynamics.ClosestToMeanDynamics;
+import com.tioxii.simulation.consensus.metric.dynamics.MeanValueDynamics;
+import com.tioxii.simulation.consensus.metric.dynamics.VoterDynamics;
+import com.tioxii.simulation.consensus.metric.termination.BaseTermination;
+import com.tioxii.simulation.consensus.metric.termination.BaseTerminationDishonest;
+import com.tioxii.simulation.consensus.metric.termination.EpsilonTermination;
+import com.tioxii.simulation.consensus.metric.termination.FiftyPercentTermination;
+import com.tioxii.simulation.consensus.metric.termination.NumberOfClusterTermination;
 import com.tioxii.simulation.consensus.metric.util.Iterations;
 
 /**
@@ -94,14 +94,14 @@ public class SimulationApp {
      * @param dynamic
      * @return
      */
-    public static IDynamic setUpDynamic(Settings option) {
+    public static IDynamics setUpDynamic(Settings option) {
         switch(option.dynamic) {
-            case "base": return new BaseDynamic();
-            case "base-random": return new BaseDynamicRandom(option.beta);
-            case "one-majority": return new OneMajorityDynamic();
-            case "mean-value": return new MeanValueDynamic(option.h);
-            case "closest-to-mean": return new ClosestToMeanDynamic();
-            default: return new BaseDynamic();
+            case "base": return new ClosestNodeDynamics();
+            case "base-random": return new BetaClosestNodeDynamics(option.beta);
+            case "one-majority": return new VoterDynamics();
+            case "mean-value": return new MeanValueDynamics(option.h);
+            case "closest-to-mean": return new ClosestToMeanDynamics();
+            default: return new ClosestNodeDynamics();
         }
     }
 
@@ -162,7 +162,7 @@ public class SimulationApp {
      * @param options
      * @return
      */
-    public static INodeGenerator setUpNodeGenerator(Settings options) {
+    public static IConfiguration setUpNodeGenerator(Settings options) {
         Class<? extends Node> clazz = setUpNodeType(options.nodetype);
         double[][] opposing = {{0.25, 0.5}, {0.75, 0.5}};
 
@@ -181,7 +181,7 @@ public class SimulationApp {
         }
     }
 
-    public static ITerminate setUpTerminator(Settings options) {
+    public static ITermination setUpTerminator(Settings options) {
         double[] byzantine_position = {0.75, 0.5};
         switch(options.terminator) {
             case "two-clusters": return new NumberOfClusterTermination();

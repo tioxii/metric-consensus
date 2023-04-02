@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.tioxii.simulation.consensus.metric.util.DynamicUtil;
+import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
 
 public class DynamicUtilTest {
     
@@ -18,7 +18,7 @@ public class DynamicUtilTest {
     @Test
     public void testfillArrayWithRandomNumbers() {
         double[] doubleArray = new double[100];
-        DynamicUtil.fillArrayWithRandomNumbers(doubleArray, 0);
+        DynamicsUtil.fillArrayWithRandomNumbers(doubleArray, 0);
         boolean isInRange = true;
         for(int i = 0; i < doubleArray.length; i++) {
             isInRange &= checkIsInRange(doubleArray[i], 0, 1);

@@ -11,9 +11,9 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tioxii.simulation.consensus.metric.api.IDynamic;
-import com.tioxii.simulation.consensus.metric.api.INodeGenerator;
-import com.tioxii.simulation.consensus.metric.api.ITerminate;
+import com.tioxii.simulation.consensus.metric.api.IDynamics;
+import com.tioxii.simulation.consensus.metric.api.IConfiguration;
+import com.tioxii.simulation.consensus.metric.api.ITermination;
 import com.tioxii.simulation.consensus.metric.exceptions.NetworkGenerationException;
 import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
 import com.tioxii.simulation.consensus.metric.util.SampleData;
@@ -27,9 +27,9 @@ public class SimulationManager {
     private int[] PARTICIPATING_NODES = null;
     private boolean SYNCHRONOUS = true;
 
-    private INodeGenerator GENERATOR = null;
-    private ITerminate TERMINATOR = null;
-    private IDynamic DYNAMIC = null;
+    private IConfiguration GENERATOR = null;
+    private ITermination TERMINATOR = null;
+    private IDynamics DYNAMIC = null;
 
     private String[] PARAMETER = null;
     private String[] PARAMETER_NAMES = null;
@@ -62,10 +62,10 @@ public class SimulationManager {
     public SimulationManager(int dimensions, 
                       int sim_rounds, 
                       int[] participating_nodes,
-                      IDynamic dynamic,
+                      IDynamics dynamic,
                       boolean synchronous,
-                      INodeGenerator generator,
-                      ITerminate terminator) 
+                      IConfiguration generator,
+                      ITermination terminator) 
     {
         this.SIM_ROUNDS = sim_rounds;
         this.PARTICIPATING_NODES = participating_nodes;

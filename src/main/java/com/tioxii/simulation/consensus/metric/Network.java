@@ -6,14 +6,14 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tioxii.simulation.consensus.metric.api.IDynamic;
-import com.tioxii.simulation.consensus.metric.api.ITerminate;
+import com.tioxii.simulation.consensus.metric.api.IDynamics;
+import com.tioxii.simulation.consensus.metric.api.ITermination;
 import com.tioxii.util.IThreadQueueElement;
 
 public class Network implements Runnable, IThreadQueueElement {
     //Environment constraints
-    private IDynamic dynamic;
-    private ITerminate terminate = null;
+    private IDynamics dynamic;
+    private ITermination terminate = null;
     private Node[] nodes = null;
     private boolean isSynchronous = true;
     
@@ -33,10 +33,10 @@ public class Network implements Runnable, IThreadQueueElement {
      * @param isSynchronous
      */
     public Network(
-        IDynamic dynamic,
+        IDynamics dynamic,
         Node[] nodes, 
         boolean isSynchronous, 
-        ITerminate terminator,
+        ITermination terminator,
         boolean log_history) 
     {
         this.dynamic = dynamic;

@@ -7,8 +7,8 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import com.tioxii.simulation.consensus.metric.Node;
+import com.tioxii.simulation.consensus.metric.configurations.OneByzantineCluster;
 import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.simulation.consensus.metric.generators.OneByzantineCluster;
 
 public class OneByzantineClusterTest {
     

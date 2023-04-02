@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import com.tioxii.simulation.consensus.metric.Node;
-import com.tioxii.simulation.consensus.metric.generators.TwoRandomFarAway;
+import com.tioxii.simulation.consensus.metric.configurations.TwoRandomFarAway;
 
 public class TwoFarAwayTest {
     
