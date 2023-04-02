@@ -3,7 +3,7 @@ package com.tioxii.simulation.consensus.metric.termination;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.ITermination;
 
-public class BaseTermination implements ITermination {
+public class ConsensusTermination implements ITermination {
 
     @Override
     public boolean shouldTerminate(Node[] nodes) {
@@ -38,6 +38,6 @@ public class BaseTermination implements ITermination {
     }
 
     public ITermination copyThis() {
-        return new BaseTermination();
+        return new ConsensusTermination();
     }
 }

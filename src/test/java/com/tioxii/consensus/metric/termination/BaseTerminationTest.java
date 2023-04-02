@@ -8,12 +8,12 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.tioxii.simulation.consensus.metric.Network;
+import com.tioxii.simulation.consensus.metric.Simulation;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.configurations.RandomNodes;
 import com.tioxii.simulation.consensus.metric.dynamics.ClosestNodeDynamics;
 import com.tioxii.simulation.consensus.metric.exceptions.NodeGenerationException;
-import com.tioxii.simulation.consensus.metric.termination.BaseTermination;
+import com.tioxii.simulation.consensus.metric.termination.ConsensusTermination;
 
 public class BaseTerminationTest {
     
@@ -52,14 +52,14 @@ public class BaseTerminationTest {
     @Test
     public void testBaseTerminationSynchronous() {
         int TEST_ROUNDS = 1000;
-        Network network = null;
-        BaseTermination termination = new BaseTermination();
+        Simulation network = null;
+        ConsensusTermination termination = new ConsensusTermination();
         RandomNodes random = new RandomNodes(2, Node.class);
         ClosestNodeDynamics dynamic = new ClosestNodeDynamics();
 
         try {
             for(int i = 0; i < TEST_ROUNDS; i++) {
-                network = new Network(dynamic, random.generate(1000), true, termination.copyThis(), true);
+                network = new Simulation(dynamic, random.generate(1000), true, termination.copyThis(), true);
                 network.setThread(new Thread(network));
                 network.getThread().start();
 
@@ -83,14 +83,14 @@ public class BaseTerminationTest {
     @Test
     public void testBaseTerminationAsynchronous() {
         int TEST_ROUNDS = 1000;
-        Network network = null;
-        BaseTermination termination = new BaseTermination();
+        Simulation network = null;
+        ConsensusTermination termination = new ConsensusTermination();
         RandomNodes random = new RandomNodes(2, Node.class);
         ClosestNodeDynamics dynamic = new ClosestNodeDynamics();
 
         try {
             for(int i = 0; i < TEST_ROUNDS; i++) {
-                network = new Network(dynamic, random.generate(1000), false, termination.copyThis(), true);
+                network = new Simulation(dynamic, random.generate(1000), false, termination.copyThis(), true);
                 network.setThread(new Thread(network));
                 network.getThread().start();
 

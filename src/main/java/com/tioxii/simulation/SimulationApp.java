@@ -33,8 +33,8 @@ import com.tioxii.simulation.consensus.metric.dynamics.BetaClosestNodeDynamics;
 import com.tioxii.simulation.consensus.metric.dynamics.ClosestToMeanDynamics;
 import com.tioxii.simulation.consensus.metric.dynamics.MeanValueDynamics;
 import com.tioxii.simulation.consensus.metric.dynamics.VoterDynamics;
-import com.tioxii.simulation.consensus.metric.termination.BaseTermination;
-import com.tioxii.simulation.consensus.metric.termination.BaseTerminationDishonest;
+import com.tioxii.simulation.consensus.metric.termination.ConsensusTermination;
+import com.tioxii.simulation.consensus.metric.termination.AlmostConsensusTermination;
 import com.tioxii.simulation.consensus.metric.termination.EpsilonTermination;
 import com.tioxii.simulation.consensus.metric.termination.FiftyPercentTermination;
 import com.tioxii.simulation.consensus.metric.termination.NumberOfClusterTermination;
@@ -185,11 +185,11 @@ public class SimulationApp {
         double[] byzantine_position = {0.75, 0.5};
         switch(options.terminator) {
             case "two-clusters": return new NumberOfClusterTermination();
-            case "base": return new BaseTermination();
+            case "base": return new ConsensusTermination();
             case "fifty": return new FiftyPercentTermination(byzantine_position);
             case "epsilon": return new EpsilonTermination(options.epsilon);
-            case "basedishonest": return new BaseTerminationDishonest();
-            default: return new BaseTermination();
+            case "basedishonest": return new AlmostConsensusTermination();
+            default: return new ConsensusTermination();
         }
     }
 

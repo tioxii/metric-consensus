@@ -24,7 +24,7 @@ public class SimulationManager {
     
     //Default Parameters
     private int SIM_ROUNDS = 1000;
-    private int[] PARTICIPATING_NODES = null;
+    private int[] NUMBER_OF_NODES = null;
     private boolean SYNCHRONOUS = true;
 
     private IConfiguration GENERATOR = null;
@@ -44,7 +44,7 @@ public class SimulationManager {
     //Utility
     private static Logger log = LogManager.getLogger("Simulation");
     public int MAX_THREAD_COUNT = 6;
-    private ThreadQueue<Network> QUEUE = null;
+    private ThreadQueue<Simulation> QUEUE = null;
     private SampleData dataCollection = null;
     private SampleData positionCollection = null;
 
@@ -68,7 +68,7 @@ public class SimulationManager {
                       ITermination terminator) 
     {
         this.SIM_ROUNDS = sim_rounds;
-        this.PARTICIPATING_NODES = participating_nodes;
+        this.NUMBER_OF_NODES = participating_nodes;
         this.DYNAMIC = dynamic;
         this.SYNCHRONOUS = synchronous;
         this.GENERATOR = generator;
@@ -145,15 +145,15 @@ public class SimulationManager {
             this.positionCollection.close();
     }
 
-    private void writeIterations(int iteration) throws IOException {
+    private void checkPoint(int iteration) throws IOException {
         if(this.time < 10.0) {
             return;
         }
         
         File file = new File("iteration.txt");
         FileWriter out = new FileWriter(file);
-        for(int i = iteration + 1; i < PARTICIPATING_NODES.length; i++) {
-            out.write(PARTICIPATING_NODES[i] + "\n");
+        for(int i = iteration + 1; i < NUMBER_OF_NODES.length; i++) {
+            out.write(NUMBER_OF_NODES[i] + "\n");
         }
         out.close();
     }
@@ -162,10 +162,10 @@ public class SimulationManager {
      * Iterate over the simulation.
      */
     private void iterateOverSimulations() {
-        for(int i = 0; i < PARTICIPATING_NODES.length; i ++) {
+        for(int i = 0; i < NUMBER_OF_NODES.length; i ++) {
             try {
                 simulate(i);
-                writeIterations(i);
+                checkPoint(i);
             } catch (NetworkGenerationException | NodeGenerationException | IOException e) {
                 e.printStackTrace();
                 log.error("Failed to simulate round: " + i);
@@ -196,9 +196,9 @@ public class SimulationManager {
     private void createNetworks(int iteration) throws NodeGenerationException {
         //Creating Network simulations and add them to the q.
         for(int i = 0; i < SIM_ROUNDS; i++) {
-            Network net = new Network(
+            Simulation net = new Simulation(
                 DYNAMIC, 
-                GENERATOR.generate(PARTICIPATING_NODES[iteration]), 
+                GENERATOR.generate(NUMBER_OF_NODES[iteration]), 
                 SYNCHRONOUS, 
                 TERMINATOR.copyThis(), 
                 RECORD_POSITIONS
@@ -224,7 +224,7 @@ public class SimulationManager {
         //Printing Results to CSV file.
         if(dataCollection != null) {
             try {
-                dataCollection.print(PARTICIPATING_NODES[iteration], data, PARAMETER);
+                dataCollection.print(NUMBER_OF_NODES[iteration], data, PARAMETER);
             } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
                 log.error(e.getMessage());
             }
@@ -241,7 +241,7 @@ public class SimulationManager {
         ArrayList<Data> data = new ArrayList<>();
 
         log.info("-------Starting Simulation-------");
-        log.info("Participants: " + PARTICIPATING_NODES[iteration]);
+        log.info("Participants: " + NUMBER_OF_NODES[iteration]);
         log.info("Byzantine-Nodes: " + 0);
         log.info("Generator: " + GENERATOR.getClass().getSimpleName());
         log.info("Dynamic: " + DYNAMIC.getClass().getSimpleName());
@@ -287,7 +287,7 @@ public class SimulationManager {
      * Collect positions from the metric consensus process.
      * @param net
      */
-    private void handlePositions(Network net) {
+    private void handlePositions(Simulation net) {
         if(positionCollection != null) {
             ArrayList<double[][]> hist = net.getHistory();
             try {
@@ -303,7 +303,7 @@ public class SimulationManager {
      * @param data
      */
     private void evaluate(ArrayList<Data> data) {
-        Network net = null;
+        Simulation net = null;
 
         for (int i = 0; i < SIM_ROUNDS; i++) {
             try {
