@@ -9,20 +9,21 @@ In each round all nodes apply the same procedure, which is referred to as dynami
 
 ## Dynamics
 There are 4 dynamics implemented in this project:
-- BaseDynamic
-- OnMajorityDynamic
-- BaseDynamicRandom
-- MeanValueDynamic
+- ClosestNodeDynamics
+- (1 + beta) - ClosestNodeDynamics
+- VoterDynamics
+- MeanValueDynamics
+- ClosestToMeanDynamics
 
 ## Termination
-There are three termination criterias implemented in this project:
-- BaseTermination
+There are three termination criteria implemented in this project:
+- ConsensusTermination
 - EpsilonTermination
 - FiftyPercentTermination
 
-## Starting Positions
+## Starting Configurations
 There are a bunch of starting positions implemented in this project:
-- RandomNodes
+- RandomPositions
 - Circle
-- Opposing
+- TwoChoices
 - Byzantine
