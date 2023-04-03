@@ -2,7 +2,7 @@ package com.tioxii.consensus.metric.util;
 
 import org.junit.Test;
 
-import com.tioxii.simulation.consensus.metric.util.Iterations;
+import com.tioxii.simulation.consensus.metric.util.init.Iterations;
 
 public class IterationTest {
     

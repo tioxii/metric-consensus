@@ -1,4 +1,4 @@
-package com.tioxii.simulation.consensus.metric.util;
+package com.tioxii.simulation.consensus.metric.util.init;
 
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
 import com.tioxii.simulation.consensus.metric.api.IDynamics;
@@ -8,7 +8,7 @@ public class Parameter {
     public IDynamics dynamics;
     public IConfiguration configuration;
     public ITermination termination;
-    public boolean isSynchroneous = true;
+    public boolean isSynchronous = true;
     
     public int maxSimulations = 100;
     public int dimension = 2;

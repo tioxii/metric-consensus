@@ -1,4 +1,4 @@
-package com.tioxii.simulation.consensus.metric.util;
+package com.tioxii.simulation.consensus.metric.util.init;
 
 public class Iterations {
     

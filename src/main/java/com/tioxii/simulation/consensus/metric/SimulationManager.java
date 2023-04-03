@@ -13,8 +13,8 @@ import com.tioxii.simulation.consensus.metric.exceptions.SimulationInitException
 import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.exceptions.DataCollectionException;
 import com.tioxii.simulation.consensus.metric.exceptions.EvaluationException;
-import com.tioxii.simulation.consensus.metric.util.Parameter;
 import com.tioxii.simulation.consensus.metric.util.datacollection.DataCollectionManager;
+import com.tioxii.simulation.consensus.metric.util.init.Parameter;
 import com.tioxii.util.ThreadQueue;
 
 public class SimulationManager {
@@ -34,7 +34,7 @@ public class SimulationManager {
     /**
      * For data collection.
      */
-    public class Data {
+    private class Data {
         public int consensusTime;
         public double[] startMean;
         public double[] endMean;
@@ -67,9 +67,9 @@ public class SimulationManager {
         log.info("Configuration: " + PARAMETER.configuration.getClass().getSimpleName());
         log.info("Dynamics: " + PARAMETER.dynamics.getClass().getSimpleName());
         log.info("Simulation-Rounds: " + PARAMETER.maxSimulations);
-        log.info("Synchronous: " + PARAMETER.isSynchroneous);
+        log.info("Synchronous: " + PARAMETER.isSynchronous);
         log.info("Termination: " + PARAMETER.termination.getClass().getSimpleName());
-
+        
         try {
             dataCollectionManager = new DataCollectionManager(dirName, PARAMETER);
             for(int i = 0; i < PARAMETER.numberOfNodes.length; i++) {
@@ -102,7 +102,7 @@ public class SimulationManager {
             Simulation net = new Simulation(
                 PARAMETER.dynamics, 
                 PARAMETER.configuration.generate(PARAMETER.numberOfNodes[iteration]), 
-                PARAMETER.isSynchroneous, 
+                PARAMETER.isSynchronous, 
                 PARAMETER.termination.copyThis(), 
                 false
             );
