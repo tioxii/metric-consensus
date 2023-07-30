@@ -8,9 +8,7 @@ public class RandomNodesPreset100 implements IConfiguration {
     
     double[][] opinions = new double[100][];
 
-    public RandomNodesPreset100() {
-        //TODO
-    }
+    public RandomNodesPreset100() {}
 
     @Override
     public Node[] generate(int number) throws ConfigurationInitException {
