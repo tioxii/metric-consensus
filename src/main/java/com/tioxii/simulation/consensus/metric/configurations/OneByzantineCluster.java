@@ -7,7 +7,7 @@ import java.util.Collections;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
 import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
-import com.tioxii.util.Parameter;
+import com.tioxii.simulation.consensus.metric.util.Parameter;
 
 public class OneByzantineCluster implements IConfiguration {
     

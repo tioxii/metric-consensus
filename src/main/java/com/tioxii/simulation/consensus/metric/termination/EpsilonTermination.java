@@ -2,10 +2,10 @@ package com.tioxii.simulation.consensus.metric.termination;
 
 import java.util.Arrays;
 
-import com.tioxii.math.Distance;
+import com.tioxii.simulation.consensus.metric.util.math.Distance;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.ITermination;
-import com.tioxii.util.Parameter;
+import com.tioxii.simulation.consensus.metric.util.Parameter;
 
 public class EpsilonTermination implements ITermination {
 

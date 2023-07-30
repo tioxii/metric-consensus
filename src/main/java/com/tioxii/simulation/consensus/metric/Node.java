@@ -44,7 +44,7 @@ public class Node {
 
     /**
      * Tests if this node is honest.
-     * @return False when dishonest.
+     * @return True when honest. False when dishonest.
      */
     public boolean ishonest() {
         return this.isHonest;

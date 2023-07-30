@@ -1,6 +1,6 @@
 package com.tioxii.simulation.consensus.metric.dynamics;
 
-import com.tioxii.math.Distance;
+import com.tioxii.simulation.consensus.metric.util.math.Distance;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IDynamics;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;

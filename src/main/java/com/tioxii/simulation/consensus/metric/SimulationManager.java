@@ -10,12 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tioxii.simulation.consensus.metric.exceptions.SimulationInitException;
+import com.tioxii.simulation.consensus.metric.init.Parameter;
 import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.exceptions.DataCollectionException;
 import com.tioxii.simulation.consensus.metric.exceptions.EvaluationException;
 import com.tioxii.simulation.consensus.metric.util.datacollection.DataCollectionManager;
-import com.tioxii.simulation.consensus.metric.util.init.Parameter;
-import com.tioxii.util.ThreadQueue;
+import com.tioxii.simulation.consensus.metric.util.threads.ThreadQueue;
 
 public class SimulationManager {
     

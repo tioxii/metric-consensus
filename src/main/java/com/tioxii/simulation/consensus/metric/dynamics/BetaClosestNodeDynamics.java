@@ -1,9 +1,9 @@
 package com.tioxii.simulation.consensus.metric.dynamics;
 
-import com.tioxii.math.RandomMethods;
+import com.tioxii.simulation.consensus.metric.util.math.RandomMethods;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IDynamics;
-import com.tioxii.util.Parameter;
+import com.tioxii.simulation.consensus.metric.util.Parameter;
 
 public class BetaClosestNodeDynamics implements IDynamics {
 

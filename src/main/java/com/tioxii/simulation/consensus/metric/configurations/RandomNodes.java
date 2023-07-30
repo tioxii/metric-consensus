@@ -6,13 +6,17 @@ import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IConfiguration;
 import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitException;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
-import com.tioxii.util.Parameter;
+import com.tioxii.simulation.consensus.metric.util.Parameter;
 
 public class RandomNodes implements IConfiguration {
 
     @Parameter(isParameter = false, name = "Dimension")
     public int dimension = 2;
     Class<? extends Node> clazz;
+
+    public RandomNodes() {
+        this.clazz = Node.class;
+    }
 
     public RandomNodes(int dimension, Class<? extends Node> clazz) {
         this.dimension = dimension;

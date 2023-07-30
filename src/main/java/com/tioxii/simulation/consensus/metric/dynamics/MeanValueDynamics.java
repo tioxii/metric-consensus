@@ -3,7 +3,7 @@ package com.tioxii.simulation.consensus.metric.dynamics;
 import com.tioxii.simulation.consensus.metric.Node;
 import com.tioxii.simulation.consensus.metric.api.IDynamics;
 import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
-import com.tioxii.util.Parameter;
+import com.tioxii.simulation.consensus.metric.util.Parameter;
 
 public class MeanValueDynamics implements IDynamics {
 

@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.tioxii.simulation.consensus.metric.api.IDynamics;
 import com.tioxii.simulation.consensus.metric.api.ITermination;
-import com.tioxii.util.IThreadQueueElement;
+import com.tioxii.simulation.consensus.metric.util.threads.IThreadQueueElement;
 
 public class Simulation implements Runnable, IThreadQueueElement {
     //Environment constraints

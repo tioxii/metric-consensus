@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.tioxii.simulation.consensus.metric.exceptions.DataCollectionException;
-import com.tioxii.simulation.consensus.metric.util.init.Parameter;
-import com.tioxii.util.ReflectionMethods;
+import com.tioxii.simulation.consensus.metric.init.Parameter;
+import com.tioxii.simulation.consensus.metric.util.ReflectionMethods;
 
 public class DataCollectionManager {
     
