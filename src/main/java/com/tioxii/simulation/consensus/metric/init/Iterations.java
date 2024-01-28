@@ -6,54 +6,68 @@ public class Iterations {
      * Generate an Array that contains the number of participating nodes. Increments are exponential to base 10.
      * @param start inclusive
      * @param end exclusive
-     * @param steps
-     * @return
-     * @throws Exception
+     * @param steps Increment value. Must be greater than 0.
+     * @return Array that indicates the number of nodes that should be used for the simulation process.
      */
     public static int[] iterationsExponential(int start, int end, int steps) {
+        
+        /* Check if the parameters are valid */
         if(start > end && end <= 9) {
             return new int[0];
         }
         
-        int[] ret = new int[end - start];
-        for(int i = 0; i < ret.length; i += steps) {
-            ret[i] = (int) Math.pow(10, i + start);
+        /* Generate the array */
+        int[] numbersOfNodes = new int[end - start];
+        for(int i = 0; i < numbersOfNodes.length; i += steps) {
+            numbersOfNodes[i] = (int) Math.pow(10, i + start);
         }
-
-        return ret;
+        return numbersOfNodes;
     }
 
+    /**
+     * Generate an Array that contains the number of participating nodes. Increments are exponential to base 10.
+     * @param start Inclusive. Start value must be greater than 0.
+     * @param end Exclusive. End value must be greater than 0.
+     * @param steps Increment value. Must be greater than 0.
+     * @return Array that indicates the number of nodes that should be used for the simulation process.
+     */
     public static int[] iterationsExpLin(int start, int end, int steps) {
+        
+        /* Check if the parameters are valid */
         if(start > end) {
             return new int[0];
         }
 
-        int[] numberOfParticipants = new int[(end - start) * 9];
+        /* Generate the array */
+        int[] numbersOfNodes = new int[(end - start) * 9];
         for(int i = 0; i < end - start; i += steps) {
             for(int j = 0; j < 9; j++) {
-                numberOfParticipants[i * 9 + j] = (int) Math.pow(10, i + start) * (j + 1);
+                numbersOfNodes[i * 9 + j] = (int) Math.pow(10, i + start) * (j + 1);
             }
         }
-        return numberOfParticipants;
+        return numbersOfNodes;
     }
 
     /**
      * Generate an Array that contains the number of participating nodes. Increments are linear.
-     * @param start inclusive
-     * @param end exclusive
-     * @param steps
-     * @return
+     * @param start Inclusive. Start value must be greater than 0.
+     * @param end Exclusive. End value must be greater than 0.
+     * @param steps Increment value. Must be greater than 0.
+     * @return Array that indicates the number of nodes that should be used for the simulation process.
      */
     public static int[] iterationsLinear(int start, int end, int steps) {
+        
+        /* Check if the parameters are valid */
         if(start > end && end < (int) Math.pow(2, 16)) {
             return new int[0];
         }
         
-        int[] ret = new int[end - start];
+        /* Generate the array */
+        int[] numbersOfNodes = new int[end - start];
         for(int i = 0; i < end - start; i += steps) {
-            ret[i] = start + i;
+            numbersOfNodes[i] = start + i;
         }
 
-        return ret;
+        return numbersOfNodes;
     }
 }
