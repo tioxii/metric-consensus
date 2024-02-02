@@ -11,12 +11,11 @@ import com.tioxii.simulation.consensus.metric.exceptions.ConfigurationInitExcept
 
 public class ClustersAtPositions implements IConfiguration {
     
-    private Class<? extends Node> clazz;
+    private Class<? extends Node> clazz = Node.class;
     private double[][] positions;
 
-    public ClustersAtPositions(double[][] positions, Class<? extends Node> clazz) {
+    public ClustersAtPositions(double[][] positions) {
         this.positions = positions;
-        this.clazz = clazz;
     }
 
     @Override

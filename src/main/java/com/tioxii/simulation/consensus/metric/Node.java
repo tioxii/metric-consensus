@@ -2,10 +2,21 @@ package com.tioxii.simulation.consensus.metric;
 
 import java.util.Arrays;
 
+/**
+ * Node class, used in the consensus simulation.
+ * Each node holds a multidimensional opinion/position represented by a double array.
+ */
 public class Node {
+
+    /**
+     * The opinion/position of the node.
+     */
     private double[] opinion = null;
 
-    //Is the node honest?
+    /**
+     * Tells if the node is honest and tells the truth and behaves according to the protocol.
+     * True when the node is honest. False when dishonest.
+     */
     private boolean isHonest = true;
 
     public Node(double[] newOpinion) {
@@ -13,14 +24,15 @@ public class Node {
     }
 
     /**
-     * Used in the evaluation
+     * Get the opinion/position of the node.
+     * @return The opinion/position of the node.
      */
     final public double[] getOpinion() {
         return opinion;
     }
 
     /**
-     * Used in dynamics
+     * Used in dynamics.
      */
     public double[] askOpinion() {
         return opinion;
@@ -37,6 +49,8 @@ public class Node {
 
     /**
      * Makes this node dishonest.
+     * Base value is true, so this method is used to make the node dishonest.
+     * For initialization purposes.
      */
     public void setDishonest() {
         this.isHonest = false;

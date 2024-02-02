@@ -28,9 +28,11 @@ public class Simulation implements Runnable, IThreadQueueElement {
 
     /**
      * Constructor
-     * @param dynamic
-     * @param nodes
-     * @param isSynchronous
+     * @param dynamic The dynamics to be used in the simulation.
+     * @param nodes The start configuration of the nodes.
+     * @param isSynchronous True if the simulation is synchronous, false if it is asynchronous.
+     * @param termination The termination condition.
+     * @param log_history True if the history of the nodes should be logged, false otherwise.
      */
     public Simulation(
         IDynamics dynamics,
@@ -47,8 +49,9 @@ public class Simulation implements Runnable, IThreadQueueElement {
     }
     
     /**
-     * Runs the Simulation
-     * @return State of consensus
+     * Runs the Simulation.
+     * If the simulation is synchronous, it will run the synchronous process.
+     * If the simulation is asynchronous, it will run the asynchronous process.
      */
     public void run() {
         if (isSynchronous) {
@@ -142,7 +145,7 @@ public class Simulation implements Runnable, IThreadQueueElement {
     }
 
     /**
-     * Log node opinions (positions).
+     * Log the nodes' opinions (positions).
      */
     private void logHistory() {
         double[][] round = Arrays.stream(nodes).map(node -> node.getOpinion()).toArray(double[][]::new);
@@ -150,27 +153,42 @@ public class Simulation implements Runnable, IThreadQueueElement {
     }
 
     /**
-     * Return the Number of Rounds
+     * Get the Number of Rounds, that where necessary to reach the termination condition.
+     * @return The number of rounds it took to reach the termination condition.
      */
     public int getRounds() {
         return this.rounds;
     }
 
     /**
-     * Return History
+     * Get the node history. Position of every node for each round.
+     * @return The history of the nodes.
      */
     public ArrayList<double[][]> getHistory() {
         return this.nodesHistroy;
     }
 
+    /**
+     * Get the nodes.
+     * @return The nodes.
+     */
     public Node[] getNodes() {
         return nodes;
     }
 
+    /**
+     * Tell the simulation which thread it belongs to.
+     * Set during the creation of the thread.
+     * @param thread The thread the simulation belongs to.
+     */
     public void setThread(Thread thread) {
         this.t = thread;
     }
 
+    /**
+     * Get the thread the simulation belongs to.
+     * @return The thread the simulation belongs to.
+     */
     @Override
     public Thread getThread() {
         return t;

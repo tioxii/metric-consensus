@@ -54,7 +54,8 @@ public class BaseTerminationTest {
         int TEST_ROUNDS = 1000;
         Simulation network = null;
         ConsensusTermination termination = new ConsensusTermination();
-        RandomNodes random = new RandomNodes(2, Node.class);
+        RandomNodes random = new RandomNodes();
+        random.dimension = 2;
         ClosestNodeDynamics dynamic = new ClosestNodeDynamics();
 
         try {
@@ -85,7 +86,8 @@ public class BaseTerminationTest {
         int TEST_ROUNDS = 1000;
         Simulation network = null;
         ConsensusTermination termination = new ConsensusTermination();
-        RandomNodes random = new RandomNodes(2, Node.class);
+        RandomNodes random = new RandomNodes();
+        random.dimension = 2;
         ClosestNodeDynamics dynamic = new ClosestNodeDynamics();
 
         try {

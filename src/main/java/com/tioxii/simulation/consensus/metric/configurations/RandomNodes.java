@@ -10,23 +10,32 @@ import com.tioxii.simulation.consensus.metric.util.Parameter;
 
 public class RandomNodes implements IConfiguration {
 
+    /**
+     * The dimension of the opinion/position.
+     */
     @Parameter(isParameter = false, name = "Dimension")
     public int dimension = 2;
+
+    /**
+     * The class of the node that should be generated.
+     * Exists to not break the code. Has no use.
+     */
     Class<? extends Node> clazz;
 
     public RandomNodes() {
         this.clazz = Node.class;
     }
 
-    public RandomNodes(int dimension, Class<? extends Node> clazz) {
-        this.dimension = dimension;
-        this.clazz = clazz;
-    }
-
+    /**
+     * Generates nodes with random opinions/positions.
+     * @param number The number of nodes that should be generated.
+     * @return An array of nodes.
+     */
     @Override
     public Node[] generate(int number) throws ConfigurationInitException {
         Node[] nodes = new Node[number];
 
+        /* Generate nodes */
         for (int i = 0; i < nodes.length; i++) {
             double[] opinion = new double[dimension];
             DynamicsUtil.fillArrayWithRandomNumbers(opinion, 0);

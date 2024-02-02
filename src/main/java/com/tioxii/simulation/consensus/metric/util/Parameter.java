@@ -11,6 +11,16 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Parameter {
+
+    /**
+     * If this is set to true, the field will be initialized by the {@link com.tioxii.simulation.consensus.metric.init.ParameterManager ParameterManager}.
+     * @return true if the field should be initialized by the {@link com.tioxii.simulation.consensus.metric.init.ParameterManager ParameterManager}, false otherwise.
+     */
     boolean isParameter() default false;
+
+    /**
+     * The name of the parameter. This is used to identify the parameter in the {@link com.tioxii.simulation.consensus.metric.init.ParameterManager ParameterManager}.
+     * @return The name of the parameter.
+     */
     String name() default "";
 }

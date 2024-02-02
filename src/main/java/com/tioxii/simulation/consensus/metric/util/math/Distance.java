@@ -2,8 +2,11 @@ package com.tioxii.simulation.consensus.metric.util.math;
 
 import com.tioxii.simulation.consensus.metric.util.math.exceptions.DifferentDimensionsException;
 
+/**
+ * This class contains methods to calculate distances between points. 
+ */
 public class Distance {
-    
+
     //double
 
     /**
@@ -20,9 +23,16 @@ public class Distance {
         for (int i = 0; i < pointOne.length; i++) {
             distance += Math.pow(pointOne[i] - pointTwo[i], 2);
         }
-        return (double) Math.sqrt(distance);
+        return Math.sqrt(distance);
     }
 
+    /**
+     * Calculate the euclidean distance of two points, represented as double arrays.
+     * This method does not check if the two arrays have the same length.
+     * @param pointOne is the first point.
+     * @param pointTwo is the second point.
+     * @return the euclidean distance
+     */
     public static double getDistanceEuclideanWithOutCheck(double[] pointOne, double[] pointTwo) {
         double distance = 0;
         for (int i = 0; i < pointOne.length; i++) {
@@ -106,7 +116,7 @@ public class Distance {
     /**
      * Calculate the mean point of all the points in double.
      * @param points
-     * @return
+     * @return Mean of the points in the array.
      */
     public static double[] calculateMean(double[][] points) {
         double[] meanPoint = new double[points[0].length];

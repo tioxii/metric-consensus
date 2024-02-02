@@ -2,6 +2,10 @@ package com.tioxii.simulation.consensus.metric.api;
 
 import com.tioxii.simulation.consensus.metric.Node;
 
+/**
+ * This interface is used to define a dynamic.
+ * A dynamics is an update rule that is applied to a node, each turn.
+ */
 public interface IDynamics {
     
     /**

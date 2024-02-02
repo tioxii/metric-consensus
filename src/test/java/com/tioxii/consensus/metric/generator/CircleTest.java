@@ -16,7 +16,7 @@ public class CircleTest {
     public void testgenerateNodes() {
         int number = 1000;
         Class<? extends Node> type = Node.class;
-        Circle generator = new Circle(11, type);
+        Circle generator = new Circle();
         Node[] nodes = null;
 
         try {

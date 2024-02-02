@@ -2,6 +2,11 @@ package com.tioxii.simulation.consensus.metric.api;
 
 import com.tioxii.simulation.consensus.metric.Node;
 
+/**
+ * This interface is used to define a termination criterion.
+ * A termination is a condition that is checked each turn.
+ * If the condition is true, the simulation will terminate.
+ */
 public interface ITermination {
 
     /**
@@ -30,7 +35,9 @@ public interface ITermination {
     
     /**
      * Creates a copy of the termination object.
-     * tbh I don't know why this is needed. But I remember I had a good reason.
+     * Sometimes there are local variables, that are changed during the simulation.
+     * At the start of the simulation, each simulation gets a copy of the original termination object.
+     * This way the termination object can changed its local variables, without affecting other simulations.
      * @return A copy of the termination object.
      */
     ITermination copyThis();

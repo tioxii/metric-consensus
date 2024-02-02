@@ -1,7 +1,8 @@
 package com.tioxii.simulation.consensus.metric.util.math.exceptions;
 
 /**
- * Should be thrown when two arrays have not the same length in the context of dimensions
+ * Should be thrown when two arrays have not the same length in the context of dimensions.
+ * Does not really have a purpose yet.
  */
 public class DifferentDimensionsException extends Exception {
 
