@@ -15,10 +15,8 @@ public class TwoRandomFarAway implements IConfiguration {
 
     /**
      * The offset for the second batch of nodes.
-     * Although this value changes in code, it only takes two values.
-     * Therfore, I decided to mark it as a constant.
      */
-    double OFFSET = 100;
+    double offset = 100;
 
     /**
      * The dimension of the space in which the nodes are placed.
@@ -33,7 +31,7 @@ public class TwoRandomFarAway implements IConfiguration {
     private void createNodes(ArrayList<Node> nodes, int number) {
         for(int i = 0; i < number; i++) {
             double[] position = new double[dimension];
-            DynamicsUtil.fillArrayWithRandomNumbers(position, OFFSET);
+            DynamicsUtil.fillArrayWithRandomNumbers(position, offset);
             Node node = new Node(position);
             nodes.add(node);
         }
@@ -54,11 +52,11 @@ public class TwoRandomFarAway implements IConfiguration {
         ArrayList<Node> nodes = new ArrayList<>();
 
         /* The first batch of nodes is placed in a space with an offset of 100. */
-        this.OFFSET = 100;
+        this.offset = 100;
         createNodes(nodes, firstBatchSize);
 
         /* The second batch of nodes is placed in a space with an offset of 0. */
-        this.OFFSET = 0;
+        this.offset = 0;
         createNodes(nodes, secondBatchSize);
 
         return nodes.stream().toArray(Node[]::new);

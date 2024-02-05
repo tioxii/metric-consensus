@@ -11,7 +11,10 @@ import com.tioxii.simulation.consensus.metric.SimulationManager;
 import com.tioxii.simulation.consensus.metric.init.Parameter;
 import com.tioxii.simulation.consensus.metric.init.ParameterManager;
 
-
+/**
+ * SimulationApp.
+ * This is the main class of the simulation.
+ */
 public class SimulationApp {
     
     /* Log Level. TODO: Implement with config file. */

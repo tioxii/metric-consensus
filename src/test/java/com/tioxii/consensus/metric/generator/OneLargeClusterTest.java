@@ -12,7 +12,7 @@ public class OneLargeClusterTest {
     
     @Test
     public void testGenerateOneLargeCluster() {
-        OneLargeCluster generator = new OneLargeCluster(0.0);
+        OneLargeCluster generator = new OneLargeCluster();
         Node[] nodes = null;
         
         try {

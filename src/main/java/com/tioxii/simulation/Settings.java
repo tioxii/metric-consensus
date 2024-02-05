@@ -6,6 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * This class is still an artifact of the original project.
+ * Some methods are still used in the current project.
+ * I want to remove this class in the future, and move the contents to the ParameterManager class.
+ * The class is used to read the settings from the consensus.properties file.
+ */
 public class Settings {
     
     //Collection of results
@@ -13,7 +19,6 @@ public class Settings {
     public boolean record_results;
     public String preset;
     public String file_name;
-    public int max_thread_count;
 
     public Settings() throws FileNotFoundException, IOException, NumberFormatException {
         String consensusConfigPath = "consensus.properties";
@@ -28,7 +33,6 @@ public class Settings {
             this.record_positions = Boolean.parseBoolean(((String) consensusProps.getOrDefault("record_positions", "false")).replaceAll(" ", ""));
             this.record_results = Boolean.parseBoolean(((String) consensusProps.getOrDefault("record_results", "false")).replaceAll(" ", ""));
             this.file_name = (String) consensusProps.getOrDefault("filename", "none");
-            this.max_thread_count = Integer.parseInt(((String) consensusProps.getOrDefault("max_thread_count", "1")).replaceAll(" ", ""));
         }
     }
 }

@@ -12,7 +12,13 @@ import com.tioxii.simulation.consensus.metric.util.DynamicsUtil;
  */
 public class ClosestNodeDynamics implements IDynamics {
     
-
+    /**
+     * This method applies the dynamics to a node.
+     * A node will ask two random nodes for their opinion and adapt the opinion/position of the closest node.
+     * @param index The index of the node.
+     * @param nodes The nodes of the consensus process.
+     * @return The new node with the new opinion/position.
+     */
     @Override
     public Node applyDynamicOn(int index, final Node[] nodes) {
 

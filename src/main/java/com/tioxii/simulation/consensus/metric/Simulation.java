@@ -10,24 +10,61 @@ import com.tioxii.simulation.consensus.metric.api.IDynamics;
 import com.tioxii.simulation.consensus.metric.api.ITermination;
 import com.tioxii.simulation.consensus.metric.util.threads.IThreadQueueElement;
 
+/**
+ * The Simulation class is responsible for running the simulation.
+ * It can run the simulation synchronously or asynchronously.
+ * It also logs the history of the nodes if the isLoggingNodeHistory is set to true.
+ */
 public class Simulation implements Runnable, IThreadQueueElement {
-    //Environment constraints
+    
+    /**
+     * The dynamics to be used in the simulation.
+     */
     private IDynamics dynamics;
+    
+    /**
+     * The termination condition.
+     */
     private ITermination termination = null;
+    
+    /**
+     * The nodes in the simulation.
+     */
     private Node[] nodes = null;
+
+    /**
+     * True if the simulation is synchronous, false if it is asynchronous.
+     */
     private boolean isSynchronous = true;
     
-    //Utility
+    /**
+     * Logger for the Simulation class.
+     */
     private static Logger log = LogManager.getLogger(Simulation.class.getName());
+
+    /**
+     * The thread the simulation belongs to.
+     */
     private Thread t = null;
 
-    //Data
+    /**
+     * Number of rounds it took to reach the termination condition.
+     */
     private int rounds = 0;
-    public boolean LOG_NODEHISTROY = false;
+
+    /**
+     * Log the history of the nodes. Position of every node for each round.
+     * Default is false. Set to true if the history of the nodes should be logged.
+     */
+    public boolean isLoggingNodeHistory = false;
+
+    /**
+     * History of the nodes. Position of every node for each round.
+     */
     private ArrayList<double[][]> nodesHistroy = new ArrayList<double[][]>();
 
     /**
-     * Constructor
+     * Constructor.
      * @param dynamic The dynamics to be used in the simulation.
      * @param nodes The start configuration of the nodes.
      * @param isSynchronous True if the simulation is synchronous, false if it is asynchronous.
@@ -45,7 +82,7 @@ public class Simulation implements Runnable, IThreadQueueElement {
         this.nodes = nodes;
         this.isSynchronous = isSynchronous;
         this.termination = termination;
-        this.LOG_NODEHISTROY = log_history;
+        this.isLoggingNodeHistory = log_history;
     }
     
     /**
@@ -87,7 +124,7 @@ public class Simulation implements Runnable, IThreadQueueElement {
         boolean converged = false;
         do {
             Node[] newNodes = synchronousRound(nodes);
-            if(LOG_NODEHISTROY) {
+            if(isLoggingNodeHistory) {
                 logHistory();
             }
             nodes = newNodes; //update nodes
@@ -96,7 +133,7 @@ public class Simulation implements Runnable, IThreadQueueElement {
             converged = termination.shouldTerminate(nodes); //check if converged
         } while (!converged);
 
-        if(LOG_NODEHISTROY) {
+        if(isLoggingNodeHistory) {
             logHistory();
         }
     }
@@ -131,7 +168,7 @@ public class Simulation implements Runnable, IThreadQueueElement {
             termination.asynchronous(nodes, i, oldNode); //executes every iteration
             
             i = (i + 1) % nodes.length;
-            if(LOG_NODEHISTROY && i == 0) {
+            if(isLoggingNodeHistory && i == 0) {
                 logHistory();
             }
 
@@ -139,7 +176,7 @@ public class Simulation implements Runnable, IThreadQueueElement {
             converged = termination.shouldTerminate(nodes); //test if consensus is reached
         } while (!converged);
 
-        if(LOG_NODEHISTROY) {
+        if(isLoggingNodeHistory) {
             logHistory();
         }
     }
