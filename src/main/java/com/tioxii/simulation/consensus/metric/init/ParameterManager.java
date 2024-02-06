@@ -17,12 +17,23 @@ import com.tioxii.simulation.consensus.metric.api.IConfiguration;
 import com.tioxii.simulation.consensus.metric.api.IDynamics;
 import com.tioxii.simulation.consensus.metric.api.ITermination;
 
-
+/**
+ * This class is responsible for creating the parameter object.
+ * It reads the properties file and creates the objects for the simulation.
+ * If an object has the annotation Parameter, it will be initialized with the values from the properties file,
+ * but only if the property file contains the values for the object.
+ */
 public class ParameterManager {
     
+    /**
+     * The properties file and the properties object.
+     */
     private static String propertyFile = "consensus.properties";
     private static Properties props = new Properties();
     
+    /**
+     * Default package for the dynamics, configurations and termination classes.
+     */
     private static String defaultDynamics = "com.tioxii.simulation.consensus.metric.dynamics";
     private static String defaultConfigurations = "com.tioxii.simulation.consensus.metric.configurations";
     private static String defaultTerminations = "com.tioxii.simulation.consensus.metric.termination";
@@ -30,10 +41,10 @@ public class ParameterManager {
 
     /**
      * Creates a parameter object from the properties file.
-     * @return
+     * @return A parameter object, containing all the constraints for the simulation.
      */
     public static Parameter createParameter() {
-        // Load the properties file.
+        /* Load the properties file. */
         try {
             File file = new File(propertyFile);
             props.load(new FileInputStream(file));    
@@ -41,7 +52,7 @@ public class ParameterManager {
             e.printStackTrace();
         }
         
-        // Get the properties from the file.
+        /* Get the properties from the file. */
         String dynamics = props.getProperty("dynamics");
         String configuration = props.getProperty("configuration");
         String termination = props.getProperty("termination");
@@ -50,10 +61,10 @@ public class ParameterManager {
         String dimension = props.getProperty("dimensions");
         String increment = props.getProperty("increment");
         
-        // Create a new parameter object.
+        /*  Create a new parameter object. */
         Parameter parameter = new Parameter();
 
-        // Call seperate methods to set up the parameter object.
+        /* Call seperate methods to set up the parameter object. */
         try {
             parameter.dynamics = setUpDynamics(dynamics);
             parameter.configuration = setUpConfiguration(configuration);
@@ -77,14 +88,19 @@ public class ParameterManager {
     }
 
     public static void checkAnnotation(Object obj, Field field, String objectType) throws NumberFormatException, IllegalArgumentException, IllegalAccessException {
+        
+        /* Check if the field has the annotation Parameter. */
         if(!field.isAnnotationPresent(com.tioxii.simulation.consensus.metric.util.Parameter.class)) 
             return;
 
+        /* Get the name of the field and the value from the properties file. */
         String name = field.getAnnotation(com.tioxii.simulation.consensus.metric.util.Parameter.class).name();
         String value = props.getProperty(objectType.toLowerCase() + "." + obj.getClass().getSimpleName().toLowerCase() + "." + name.toLowerCase());
 
         System.out.println("[ParameterManager]  Setting " + name + " to " + value);
         
+        /* I have not found a better way to do this. */
+        /* Ideally this is done dynamically. */
         switch(field.getType().getSimpleName()) {
             case "Integer":
                 field.set(obj, Integer.parseInt(value));
@@ -117,13 +133,16 @@ public class ParameterManager {
 
     /**
      * Initializes the object with the values from the properties file.
-     * @param obj
+     * Checks if the field has the annotation Parameter and sets the value from the properties file.
+     * @param obj The object that should be initialized.
      * @throws NumberFormatException
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
     public static void initObject(Object obj, String objectType) throws NumberFormatException, IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = obj.getClass();
+        
+        /* Loops through fields of the objects and checks for annotations. */
         Field[] fields = clazz.getFields();
         for(Field field : fields) {
             checkAnnotation(obj, field, objectType);
@@ -132,8 +151,8 @@ public class ParameterManager {
 
     /**
      * Sets up the the termination criterion object.
-     * @param termination
-     * @return
+     * @param termination Name of the terimination criterion class.
+     * @return The termination criterion object.
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
@@ -158,8 +177,8 @@ public class ParameterManager {
 
     /**
      * Sets up the dynamics object.
-     * @param dynamics
-     * @return
+     * @param dynamics Name of the dynamics class.
+     * @return The dynamics object.
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
@@ -185,8 +204,8 @@ public class ParameterManager {
 
     /**
      * Sets up the starting position of the nodes. Here called configuration.
-     * @param configuration
-     * @return
+     * @param configuration Name of the configuration class.
+     * @return The configuration object.
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
@@ -211,8 +230,8 @@ public class ParameterManager {
 
     /**
      * Sets up the number of nodes and the increment to the next simulation.
-     * @param increment
-     * @return
+     * @param increment The increment type.
+     * @return An array that contains the number of nodes for each simulation.
      */
     public static int[] setUpNumberOfNodes(String increment) { 
         int steps = Integer.parseInt(props.getProperty("step"));
